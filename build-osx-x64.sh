@@ -7,3 +7,5 @@ cd libuv
 find *.xcodeproj
 
 xcodebuild ARCHS="x86_64" -project uv.xcodeproj -configuration Release -alltargets
+
+test/release/run-tests
