@@ -8,4 +8,6 @@ find . -name "*.xcodeproj"
 
 xcodebuild ARCHS="x86_64" -project uv.xcodeproj -configuration Release -alltargets
 
-out/Release/run-tests
+xcodebuild ARCHS="x86_64" -project ./test/test.xcodeproj -configuration Release -alltargets
+
+test/build/Release/run-tests
