@@ -1,7 +1,3 @@
-cd libuv/
-rm -rf build
-rm -rf uv.xcodeproj
-mkdir -p build
-git clone https://git.chromium.org/external/gyp.git build/gyp
-./gyp_uv.py -f make -Duv_library=shared_library
+cd libuv
+../gyp/gyp -I common.gypi test/test.gyp -f make --depth=. -Duv_library=shared_library -Dtarget_arch=x64
 BUILDTYPE=Release make -C out
