@@ -23,10 +23,12 @@ if %VSCMD_ARG_TGT_ARCH%==x64 set target_arch=x64&set msbuild_platform=x64&set vs
 set GYP_MSVS_VERSION=2017
 
 cd libuv
-call "..\gyp\gyp.bat" -I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x64
+echo Generating solution and projects files
+python ..\gyp\gyp_main.py -I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x64
 if errorlevel 1 goto create-msvs-files-failed
 if not exist uv.sln goto create-msvs-files-failed
 
+echo Running msbuild
 msbuild uv.sln /t:build /p:Configuration=Release /p:Platform=x64 /clp:NoSummary;NoItemAndPropertyList;Verbosity=minimal /nologo
 if errorlevel 1 goto msbuild-failed
 msbuild test\test.sln /t:build /p:Configuration=Release /p:Platform=x64 /clp:NoSummary;NoItemAndPropertyList;Verbosity=minimal /nologo
