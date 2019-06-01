@@ -10,4 +10,5 @@ xcodebuild ARCHS="x86_64" -project uv.xcodeproj -configuration Release -alltarge
 
 xcodebuild ARCHS="x86_64" -project ./test/test.xcodeproj -configuration Release -alltargets
 
+cp build/Release/libuv.dylib test/build/Release/
 test/build/Release/run-tests
