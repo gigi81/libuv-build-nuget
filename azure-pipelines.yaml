@@ -157,20 +157,20 @@ jobs:
   - task: CMake@1
     displayName: 'Generate project'
     inputs:
-      cmakeArgs: '. -DBUILD_TESTING=ON'
+      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release'
       workingDirectory: libuv
 
   - task: CMake@1
     displayName: 'Compile'
     inputs:
-      cmakeArgs: '--build . --config release'
+      cmakeArgs: '--build . --config Release'
       workingDirectory: libuv
 
   - task: Bash@3
     displayName: 'Run tests'
     inputs:
       targetType: inline
-      script: 'out/Release/run-tests'
+      script: Release/uv_run_tests
       workingDirectory: libuv
       
   - task: Bash@3
@@ -183,7 +183,7 @@ jobs:
     displayName: 'Copy libuv.so to content directory'
     inputs:
       targetType: inline
-      script: 'cp libuv/out/Release/lib.target/libuv.so.1 contents/runtimes/linux-x64/native/libuv.so'
+      script: 'cp libuv/Release/libuv.so.1 contents/runtimes/linux-x64/native/libuv.so'
       
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
@@ -213,23 +213,20 @@ jobs:
   - task: CMake@1
     displayName: 'Generate project'
     inputs:
-      cmakeArgs: '. -DBUILD_TESTING=ON -G Xcode'
+      cmakeArgs: '. -DBUILD_TESTING=ON -G Xcode -DCMAKE_BUILD_TYPE=Release'
       workingDirectory: libuv
 
   - task: CMake@1
     displayName: 'Compile'
     inputs:
-      cmakeArgs: '--build . --config release'
+      cmakeArgs: '--build . --config Release'
       workingDirectory: libuv
 
   - task: Bash@3
     displayName: 'Run tests'
     inputs:
       targetType: inline
-      script: |
-       ls build/Release
-       export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PWD/build/Release
-       test/build/Release/run-tests
+      script: Release/uv_run_tests
       workingDirectory: libuv
 
   - task: Bash@3
