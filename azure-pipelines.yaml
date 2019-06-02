@@ -244,7 +244,7 @@ jobs:
     displayName: 'Copy libuv.dylib to content directory'
     inputs:
       targetType: inline
-      script: 'cp libuv/build/Release/libuv.dylib contents/runtimes/osx/native'
+      script: 'cp libuv/Release/libuv.dylib contents/runtimes/osx/native/libuv.dylib'
 
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
