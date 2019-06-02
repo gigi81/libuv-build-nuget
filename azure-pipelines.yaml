@@ -43,7 +43,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run tests'
     inputs:
-      script: 'libuv\test\release\run-tests'
+      script: 'test\release\run-tests'
       workingDirectory: libuv
 
 # ------- Linux -------------------------------------------------------------
