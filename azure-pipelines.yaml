@@ -15,11 +15,15 @@ jobs:
     - visualstudio
 
   steps:
+  - checkout: self
+    clean: true
+    submodules: true
+    
   - task: UsePythonVersion@0
     displayName: 'Use Python 2.x'
     inputs:
       versionSpec: 2.x
-      
+    
   - task: PythonScript@0
     displayName: 'Generate solution'
     inputs:
@@ -49,6 +53,10 @@ jobs:
   pool:
     name: Hosted Ubuntu 1604
   steps:
+  - checkout: self
+    clean: true
+    submodules: true
+    
   - task: UsePythonVersion@0
     displayName: 'Use Python 2.x'
     inputs:
@@ -67,6 +75,10 @@ jobs:
   pool:
     name: Hosted macOS High Sierra
   steps:
+  - checkout: self
+    clean: true
+    submodules: true
+
   - task: UsePythonVersion@0
     displayName: 'Use Python 2.x'
     inputs:
