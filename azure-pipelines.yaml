@@ -40,6 +40,15 @@ jobs:
       configuration: release
       msbuildArchitecture: x64
 
+  - task: VSBuild@1
+    displayName: 'Build solution test.sln'
+    inputs:
+      solution: libuv\test\test.sln
+      vsVersion: 15.0
+      platform: x64
+      configuration: release
+      msbuildArchitecture: x64
+
   - task: CmdLine@2
     displayName: 'Run tests'
     inputs:
@@ -74,6 +83,13 @@ jobs:
     inputs:
       targetType: inline
       script: 'BUILDTYPE=Release make'
+      workingDirectory: libuv
+
+  - task: Bash@3
+    displayName: 'Run tests'
+    inputs:
+      targetType: inline
+      script: 'out/Release/run-tests'
       workingDirectory: libuv
 
 # ------- Darwin -------------------------------------------------------------
