@@ -93,7 +93,7 @@ jobs:
       workingDirectory: libuv
 
   - task: CMake@1
-    displayName: 'Cmake x64'
+    displayName: 'Cmake x86'
     inputs:
       cmakeArgs: '. -DBUILD_TESTING=ON -G "Visual Studio 15 2017" -A Win32'
       workingDirectory: libuv
@@ -166,8 +166,8 @@ jobs:
     inputs:
       targetType: inline
       script: |
-       ls out/cmake
-       out/cmake/uv_run_tests
+       ls .
+       ./uv_run_tests
       workingDirectory: libuv
       
   - task: Bash@3
@@ -180,7 +180,7 @@ jobs:
     displayName: 'Copy libuv.so to content directory'
     inputs:
       targetType: inline
-      script: 'cp libuv/Release/libuv.so.1 contents/runtimes/linux-x64/native/libuv.so'
+      script: 'cp libuv/uv.so contents/runtimes/linux-x64/native/libuv.so'
       
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
