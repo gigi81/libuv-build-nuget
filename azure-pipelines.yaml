@@ -23,7 +23,7 @@ jobs:
   - task: PythonScript@0
     displayName: 'Generate solution'
     inputs:
-      scriptPath: '..\gyp\gyp_main.py'
+      scriptPath: 'gyp\gyp_main.py'
       arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x64'
       workingDirectory: libuv
       
@@ -39,7 +39,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run tests'
     inputs:
-      script: 'test\release\run-tests'
+      script: 'libuv\test\release\run-tests'
       workingDirectory: libuv
 
 # ------- Linux -------------------------------------------------------------
