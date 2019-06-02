@@ -29,7 +29,7 @@ jobs:
   - task: CMake@1
     displayName: 'Cmake arm'
     inputs:
-      cmakeArgs: '-G "Visual Studio 15 2017" -A ARM'
+      cmakeArgs: '. -G "Visual Studio 15 2017" -A ARM'
       workingDirectory: libuv
 
   - task: VSBuild@1
@@ -61,7 +61,7 @@ jobs:
   - task: CMake@1
     displayName: 'Cmake x64'
     inputs:
-      cmakeArgs: '-DBUILD_TESTING=ON -G "Visual Studio 15 2017" -A x64'
+      cmakeArgs: '. -DBUILD_TESTING=ON -G "Visual Studio 15 2017" -A x64'
       workingDirectory: libuv
       
   - task: VSBuild@1
@@ -100,7 +100,7 @@ jobs:
   - task: CMake@1
     displayName: 'Cmake x64'
     inputs:
-      cmakeArgs: '-DBUILD_TESTING=ON -G "Visual Studio 15 2017" -A Win32'
+      cmakeArgs: '. -DBUILD_TESTING=ON -G "Visual Studio 15 2017" -A Win32'
       workingDirectory: libuv
       
   - task: VSBuild@1
@@ -154,23 +154,16 @@ jobs:
     clean: true
     submodules: true
     
-  - task: UsePythonVersion@0
-    displayName: 'Use Python 2.x'
+  - task: CMake@1
+    displayName: 'Generate project'
     inputs:
-      versionSpec: 2.x
-
-  - task: PythonScript@0
-    displayName: 'Generate make file'
-    inputs:
-      scriptPath: 'gyp/gyp_main.py'
-      arguments: '-I common.gypi test/test.gyp -f make --depth=. -Duv_library=shared_library -Dtarget_arch=x64'
+      cmakeArgs: '. -DBUILD_TESTING=ON'
       workingDirectory: libuv
 
-  - task: Bash@3
-    displayName: 'Build'
+  - task: CMake@1
+    displayName: 'Compile'
     inputs:
-      targetType: inline
-      script: 'BUILDTYPE=Release make'
+      cmakeArgs: '--build . --config release'
       workingDirectory: libuv
 
   - task: Bash@3
@@ -217,16 +210,27 @@ jobs:
     clean: true
     submodules: true
 
-  - task: UsePythonVersion@0
-    displayName: 'Use Python 2.x'
+  - task: CMake@1
+    displayName: 'Generate project'
     inputs:
-      versionSpec: 2.x
+      cmakeArgs: '. -DBUILD_TESTING=ON -G Xcode'
+      workingDirectory: libuv
+
+  - task: CMake@1
+    displayName: 'Compile'
+    inputs:
+      cmakeArgs: '--build . --config release'
+      workingDirectory: libuv
 
   - task: Bash@3
-    displayName: 'Bash Script'
+    displayName: 'Run tests'
     inputs:
-      targetType: filePath
-      filePath: './build-osx-x64.sh'
+      targetType: inline
+      script: |
+       ls build/Release
+       export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$PWD/build/Release
+       test/build/Release/run-tests
+      workingDirectory: libuv
 
   - task: Bash@3
     displayName: 'Create contents directory'
