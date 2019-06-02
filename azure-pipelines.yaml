@@ -25,6 +25,7 @@ jobs:
     inputs:
       versionSpec: 2.x
     
+#--------- x64 ---------
   - task: PythonScript@0
     displayName: 'Generate solution'
     inputs:
@@ -40,6 +41,7 @@ jobs:
       platform: x64
       configuration: release
       msbuildArchitecture: x64
+      clean: true
 
   - task: VSBuild@1
     displayName: 'Build solution test.sln'
@@ -49,6 +51,7 @@ jobs:
       platform: x64
       configuration: release
       msbuildArchitecture: x64
+      clean: true
 
   - task: CmdLine@2
     displayName: 'Run tests'
@@ -65,6 +68,80 @@ jobs:
     displayName: 'Copy libuv.dll to content directory'
     inputs:
       script: 'copy libuv\release\libuv.dll contents\runtimes\win-x64\native'
+#--------- /x64 ---------
+
+#--------- x86 ---------
+  - task: PythonScript@0
+    displayName: 'Generate solution'
+    inputs:
+      scriptPath: 'gyp\gyp_main.py'
+      arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x86'
+      workingDirectory: libuv
+      
+  - task: VSBuild@1
+    displayName: 'Build solution uv.sln'
+    inputs:
+      solution: libuv\uv.sln
+      vsVersion: 15.0
+      platform: WIN32
+      configuration: release
+      msbuildArchitecture: x86
+      clean: true
+
+  - task: VSBuild@1
+    displayName: 'Build solution test.sln'
+    inputs:
+      solution: libuv\test\test.sln
+      vsVersion: 15.0
+      platform: WIN32
+      configuration: release
+      msbuildArchitecture: x86
+      clean: true
+
+  - task: CmdLine@2
+    displayName: 'Run tests'
+    inputs:
+      script: 'test\release\run-tests.exe'
+      workingDirectory: libuv
+
+  - task: CmdLine@2
+    displayName: 'Create contents directory'
+    inputs:
+      script: 'mkdir contents\runtimes\win-x86\native'
+
+  - task: CmdLine@2
+    displayName: 'Copy libuv.dll to content directory'
+    inputs:
+      script: 'copy libuv\release\libuv.dll contents\runtimes\win-x86\native'
+#--------- /x86 ---------
+
+#--------- arm ---------
+  - task: PythonScript@0
+    displayName: 'Generate solution'
+    inputs:
+      scriptPath: 'gyp\gyp_main.py'
+      arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=arm'
+      workingDirectory: libuv
+      
+  - task: VSBuild@1
+    displayName: 'Build solution uv.sln'
+    inputs:
+      solution: libuv\uv.sln
+      vsVersion: 15.0
+      platform: ARM
+      configuration: release
+      clean: true
+
+  - task: CmdLine@2
+    displayName: 'Create contents directory'
+    inputs:
+      script: 'mkdir contents\runtimes\win-arm\native'
+
+  - task: CmdLine@2
+    displayName: 'Copy libuv.dll to content directory'
+    inputs:
+      script: 'copy libuv\release\libuv.dll contents\runtimes\win-arm\native'
+#--------- /arm ---------
 
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
