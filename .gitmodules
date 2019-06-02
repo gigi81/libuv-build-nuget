@@ -1,6 +1,3 @@
 [submodule "libuv"]
 	path = libuv
 	url = https://github.com/libuv/libuv
-[submodule "gyp"]
-	path = gyp
-	url = https://chromium.googlesource.com/external/gyp

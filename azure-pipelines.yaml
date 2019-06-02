@@ -20,11 +20,6 @@ jobs:
     clean: true
     submodules: true
     
-  - task: UsePythonVersion@0
-    displayName: 'Use Python 2.x'
-    inputs:
-      versionSpec: 2.x
-  
   #--------- arm ---------
   - task: CMake@1
     displayName: 'Cmake arm'
@@ -170,7 +165,9 @@ jobs:
     displayName: 'Run tests'
     inputs:
       targetType: inline
-      script: Release/uv_run_tests
+      script: |
+       ls out/cmake
+       out/cmake/uv_run_tests
       workingDirectory: libuv
       
   - task: Bash@3
