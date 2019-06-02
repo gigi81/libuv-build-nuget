@@ -1,3 +1,4 @@
+name: 1.0.0.$(Rev:.r)
 resources:
 - repo: self
   clean: true
@@ -126,7 +127,7 @@ jobs:
     displayName: 'Copy libuv.so to content directory'
     inputs:
       targetType: inline
-      script: 'cp libuv/out/Release/libuv.so contents/runtimes/linux-x64/native'
+      script: 'cp libuv/out/Release/lib.target/libuv.so.1 contents/runtimes/linux-x64/native/libuv.so'
       
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
