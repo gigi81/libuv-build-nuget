@@ -1,0 +1,80 @@
+resources:
+- repo: self
+  clean: true
+
+jobs:
+
+# ------- Windows -------------------------------------------------------------
+- job: BuildWindows
+  displayName: win-x64
+  condition: succeeded()
+  pool:
+    name: Hosted VS2017
+    demands:
+    - msbuild
+    - visualstudio
+
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 2.x'
+    inputs:
+      versionSpec: 2.x
+      
+  - task: PythonScript@0
+    displayName: 'Generate solution'
+    inputs:
+      scriptPath: '..\gyp\gyp_main.py'
+      arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x64'
+      workingDirectory: libuv
+      
+  - task: VSBuild@1
+    displayName: 'Build solution uv.sln'
+    inputs:
+      solution: libuv\uv.sln
+      vsVersion: 15.0
+      platform: x64
+      configuration: release
+      msbuildArchitecture: x64
+
+  - task: CmdLine@2
+    displayName: 'Run tests'
+    inputs:
+      script: 'test\release\run-tests'
+      workingDirectory: libuv
+
+# ------- Linux -------------------------------------------------------------
+- job: BuildLinux
+  displayName: linux-x64
+  condition: succeeded()
+  pool:
+    name: Hosted Ubuntu 1604
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 2.x'
+    inputs:
+      versionSpec: 2.x
+
+  - task: Bash@3
+    displayName: 'Bash Script'
+    inputs:
+      targetType: filePath
+      filePath: './build-linux-x64.sh'
+
+# ------- Darwin -------------------------------------------------------------
+- job: BuildDarwin
+  displayName: osx-x64
+  condition: succeeded()
+  pool:
+    name: Hosted macOS High Sierra
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 2.x'
+    inputs:
+      versionSpec: 2.x
+
+  - task: Bash@3
+    displayName: 'Bash Script'
+    inputs:
+      targetType: filePath
+      filePath: './build-osx-x64.sh'
+

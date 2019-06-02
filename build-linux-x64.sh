@@ -7,3 +7,7 @@ cd libuv
 BUILDTYPE=Release make
 
 out/Release/run-tests
+
+cd ..
+mkdir -p contents/runtimes/linux-x64/native
+copy libuv/out/Release/libuv.so contents/runtimes/linux-x64/native

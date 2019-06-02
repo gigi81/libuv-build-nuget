@@ -40,6 +40,10 @@ cd ..
 test\release\run-tests
 if errorlevel 1 exit /b 1
 
+cd ..
+mkdir contents\runtimes\\win-x64\native
+copy libuv\release\libuv.dll contents\runtimes\\win-x64\native
+
 goto exit
 
 :vsstudio_not_found
