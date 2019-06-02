@@ -55,7 +55,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Clean libuv'
     inputs:
-      script: 'git clean -Xfd'
+      script: 'git clean -xfd'
       workingDirectory: libuv
 
   - task: CMake@1
@@ -94,7 +94,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Clean libuv'
     inputs:
-      script: 'git clean -Xfd'
+      script: 'git clean -xfd'
       workingDirectory: libuv
 
   - task: CMake@1
