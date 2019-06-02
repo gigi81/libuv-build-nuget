@@ -43,7 +43,7 @@ jobs:
   - task: CmdLine@2
     displayName: 'Run tests'
     inputs:
-      script: 'test\release\run-tests'
+      script: 'test\release\run-tests.exe'
       workingDirectory: libuv
 
 # ------- Linux -------------------------------------------------------------
@@ -62,11 +62,19 @@ jobs:
     inputs:
       versionSpec: 2.x
 
-  - task: Bash@3
-    displayName: 'Bash Script'
+  - task: PythonScript@0
+    displayName: 'Generate make file'
     inputs:
-      targetType: filePath
-      filePath: './build-linux-x64.sh'
+      scriptPath: 'gyp/gyp_main.py'
+      arguments: '-I common.gypi test/test.gyp -f make --depth=. -Duv_library=shared_library -Dtarget_arch=x64'
+      workingDirectory: libuv
+
+  - task: Bash@3
+    displayName: 'Build'
+    inputs:
+      targetType: inline
+      script: 'BUILDTYPE=Release make'
+      workingDirectory: libuv
 
 # ------- Darwin -------------------------------------------------------------
 - job: BuildDarwin
