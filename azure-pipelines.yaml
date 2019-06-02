@@ -25,16 +25,16 @@ jobs:
     inputs:
       versionSpec: 2.x
     
-#--------- x64 ---------
+  #--------- x64 ---------
   - task: PythonScript@0
-    displayName: 'Generate solution'
+    displayName: 'Generate solution x64'
     inputs:
       scriptPath: 'gyp\gyp_main.py'
       arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x64'
       workingDirectory: libuv
       
   - task: VSBuild@1
-    displayName: 'Build solution uv.sln'
+    displayName: 'Build solution uv.sln x64'
     inputs:
       solution: libuv\uv.sln
       vsVersion: 15.0
@@ -44,42 +44,41 @@ jobs:
       clean: true
 
   - task: VSBuild@1
-    displayName: 'Build solution test.sln'
+    displayName: 'Build solution test.sln x64'
     inputs:
       solution: libuv\test\test.sln
       vsVersion: 15.0
       platform: x64
       configuration: release
       msbuildArchitecture: x64
-      clean: true
 
   - task: CmdLine@2
-    displayName: 'Run tests'
+    displayName: 'Run tests x64'
     inputs:
       script: 'test\release\run-tests.exe'
       workingDirectory: libuv
 
   - task: CmdLine@2
-    displayName: 'Create contents directory'
+    displayName: 'Create contents directory x64'
     inputs:
       script: 'mkdir contents\runtimes\win-x64\native'
 
   - task: CmdLine@2
-    displayName: 'Copy libuv.dll to content directory'
+    displayName: 'Copy libuv.dll to content directory x64'
     inputs:
       script: 'copy libuv\release\libuv.dll contents\runtimes\win-x64\native'
-#--------- /x64 ---------
+  #--------- /x64 ---------
 
-#--------- x86 ---------
+  #--------- x86 ---------
   - task: PythonScript@0
-    displayName: 'Generate solution'
+    displayName: 'Generate solution x86'
     inputs:
       scriptPath: 'gyp\gyp_main.py'
       arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=x86'
       workingDirectory: libuv
       
   - task: VSBuild@1
-    displayName: 'Build solution uv.sln'
+    displayName: 'Build solution uv.sln x86'
     inputs:
       solution: libuv\uv.sln
       vsVersion: 15.0
@@ -89,42 +88,41 @@ jobs:
       clean: true
 
   - task: VSBuild@1
-    displayName: 'Build solution test.sln'
+    displayName: 'Build solution test.sln x86'
     inputs:
       solution: libuv\test\test.sln
       vsVersion: 15.0
       platform: WIN32
       configuration: release
       msbuildArchitecture: x86
-      clean: true
 
   - task: CmdLine@2
-    displayName: 'Run tests'
+    displayName: 'Run tests x86'
     inputs:
       script: 'test\release\run-tests.exe'
       workingDirectory: libuv
 
   - task: CmdLine@2
-    displayName: 'Create contents directory'
+    displayName: 'Create contents directory x86'
     inputs:
       script: 'mkdir contents\runtimes\win-x86\native'
 
   - task: CmdLine@2
-    displayName: 'Copy libuv.dll to content directory'
+    displayName: 'Copy libuv.dll to content directory x86'
     inputs:
       script: 'copy libuv\release\libuv.dll contents\runtimes\win-x86\native'
-#--------- /x86 ---------
+  #--------- /x86 ---------
 
-#--------- arm ---------
+  #--------- arm ---------
   - task: PythonScript@0
-    displayName: 'Generate solution'
+    displayName: 'Generate solution arm'
     inputs:
       scriptPath: 'gyp\gyp_main.py'
       arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=arm'
       workingDirectory: libuv
       
   - task: VSBuild@1
-    displayName: 'Build solution uv.sln'
+    displayName: 'Build solution uv.sln arm'
     inputs:
       solution: libuv\uv.sln
       vsVersion: 15.0
@@ -133,15 +131,15 @@ jobs:
       clean: true
 
   - task: CmdLine@2
-    displayName: 'Create contents directory'
+    displayName: 'Create contents directory arm'
     inputs:
       script: 'mkdir contents\runtimes\win-arm\native'
 
   - task: CmdLine@2
-    displayName: 'Copy libuv.dll to content directory'
+    displayName: 'Copy libuv.dll to content directory arm'
     inputs:
       script: 'copy libuv\release\libuv.dll contents\runtimes\win-arm\native'
-#--------- /arm ---------
+  #--------- /arm ---------
 
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
