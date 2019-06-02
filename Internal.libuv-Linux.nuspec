@@ -5,6 +5,7 @@
         <version>0.0.1-ignored</version>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>libuv build package - Linux</description>
+        <authors>Luigi Grilli</authors>
     </metadata>
     <files>
         <file src="contents/**" />
