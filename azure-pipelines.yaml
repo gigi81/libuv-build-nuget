@@ -55,6 +55,23 @@ jobs:
       script: 'test\release\run-tests.exe'
       workingDirectory: libuv
 
+  - task: CmdLine@2
+    displayName: 'Create contents directory'
+    inputs:
+      script: 'mkdir contents\runtimes\win-x64\native'
+
+  - task: CmdLine@2
+    displayName: 'Copy libuv.dll to content directory'
+    inputs:
+      script: 'copy libuv\release\libuv.dll contents\runtimes\win-x64\native'
+
+  - task: NuGetCommand@2
+    displayName: 'Create nuget package'
+    inputs:
+      command: pack
+      packagesToPack: Internal.libuv-Windows.nuspec
+      versioningScheme: byBuildNumber
+
 # ------- Linux -------------------------------------------------------------
 - job: BuildLinux
   displayName: linux-x64
@@ -91,6 +108,25 @@ jobs:
       targetType: inline
       script: 'out/Release/run-tests'
       workingDirectory: libuv
+      
+  - task: Bash@3
+    displayName: 'Create contents directory'
+    inputs:
+      targetType: inline
+      script: 'mkdir -p contents/runtimes/linux-x64/native'
+
+  - task: Bash@3
+    displayName: 'Copy libuv.so to content directory'
+    inputs:
+      targetType: inline
+      script: 'cp libuv/out/Release/libuv.so contents/runtimes/linux-x64/native'
+      
+  - task: NuGetCommand@2
+    displayName: 'Create nuget package'
+    inputs:
+      command: pack
+      packagesToPack: Internal.libuv-Linux.nuspec
+      versioningScheme: byBuildNumber
 
 # ------- Darwin -------------------------------------------------------------
 - job: BuildDarwin
@@ -114,3 +150,21 @@ jobs:
       targetType: filePath
       filePath: './build-osx-x64.sh'
 
+  - task: Bash@3
+    displayName: 'Create contents directory'
+    inputs:
+      targetType: inline
+      script: 'mkdir -p contents/runtimes/osx/native'
+
+  - task: Bash@3
+    displayName: 'Copy libuv.dylib to content directory'
+    inputs:
+      targetType: inline
+      script: 'cp libuv/build/Release/libuv.dylib contents/runtimes/osx/native'
+
+  - task: NuGetCommand@2
+    displayName: 'Create nuget package'
+    inputs:
+      command: pack
+      packagesToPack: Internal.libuv-Darwin.nuspec
+      versioningScheme: byBuildNumber
