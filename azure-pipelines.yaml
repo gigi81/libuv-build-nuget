@@ -71,6 +71,13 @@ jobs:
       command: pack
       packagesToPack: Internal.libuv-Windows.nuspec
       versioningScheme: byBuildNumber
+      
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
+      versioningScheme: byBuildNumber
 
 # ------- Linux -------------------------------------------------------------
 - job: BuildLinux
@@ -127,6 +134,13 @@ jobs:
       command: pack
       packagesToPack: Internal.libuv-Linux.nuspec
       versioningScheme: byBuildNumber
+      
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
+      versioningScheme: byBuildNumber
 
 # ------- Darwin -------------------------------------------------------------
 - job: BuildDarwin
@@ -167,4 +181,11 @@ jobs:
     inputs:
       command: pack
       packagesToPack: Internal.libuv-Darwin.nuspec
+      versioningScheme: byBuildNumber
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
       versioningScheme: byBuildNumber
