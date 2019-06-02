@@ -7,7 +7,7 @@ jobs:
 
 # ------- Windows -------------------------------------------------------------
 - job: BuildWindows
-  displayName: win-x64
+  displayName: Windows
   condition: succeeded()
   pool:
     name: Hosted VS2017
@@ -140,7 +140,7 @@ jobs:
 
 # ------- Linux -------------------------------------------------------------
 - job: BuildLinux
-  displayName: linux-x64
+  displayName: Linux
   condition: succeeded()
   pool:
     name: Hosted Ubuntu 1604
@@ -198,7 +198,7 @@ jobs:
 
 # ------- Darwin -------------------------------------------------------------
 - job: BuildDarwin
-  displayName: osx-x64
+  displayName: macOS
   condition: succeeded()
   pool:
     name: Hosted macOS High Sierra
@@ -225,12 +225,16 @@ jobs:
       targetType: inline
       script: |
        Release/uv_run_tests
-       if test $? -le 2
+       if test $? -eq 0
        then
-       	echo "$? tests failed, known issues"
-       	exit 0
+        echo "All test succeeded"
+        exit 0
+       elif test $? -le 2
+       then
+        echo "$? tests failed, known issues"
+        exit 0
        else
-       	echo "$? tests failed"
+        echo "$? tests failed"
        fi
       workingDirectory: libuv
 
