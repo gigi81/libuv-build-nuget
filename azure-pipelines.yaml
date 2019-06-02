@@ -26,6 +26,12 @@ jobs:
       versionSpec: 2.x
     
   #--------- x64 ---------
+  - task: CmdLine@2
+    displayName: 'Clean libuv'
+    inputs:
+      script: 'git -Xfd'
+      workingDirectory: libuv
+
   - task: PythonScript@0
     displayName: 'Generate solution x64'
     inputs:
@@ -70,6 +76,12 @@ jobs:
   #--------- /x64 ---------
 
   #--------- x86 ---------
+  - task: CmdLine@2
+    displayName: 'Clean libuv'
+    inputs:
+      script: 'git -Xfd'
+      workingDirectory: libuv
+
   - task: PythonScript@0
     displayName: 'Generate solution x86'
     inputs:
@@ -112,34 +124,6 @@ jobs:
     inputs:
       script: 'copy libuv\release\libuv.dll contents\runtimes\win-x86\native'
   #--------- /x86 ---------
-
-  #--------- arm ---------
-  - task: PythonScript@0
-    displayName: 'Generate solution arm'
-    inputs:
-      scriptPath: 'gyp\gyp_main.py'
-      arguments: '-I common.gypi test/test.gyp -f msvs --depth=. -Duv_library=shared_library -Dtarget_arch=arm'
-      workingDirectory: libuv
-      
-  - task: VSBuild@1
-    displayName: 'Build solution uv.sln arm'
-    inputs:
-      solution: libuv\uv.sln
-      vsVersion: 15.0
-      platform: ARM
-      configuration: release
-      clean: true
-
-  - task: CmdLine@2
-    displayName: 'Create contents directory arm'
-    inputs:
-      script: 'mkdir contents\runtimes\win-arm\native'
-
-  - task: CmdLine@2
-    displayName: 'Copy libuv.dll to content directory arm'
-    inputs:
-      script: 'copy libuv\release\libuv.dll contents\runtimes\win-arm\native'
-  #--------- /arm ---------
 
   - task: NuGetCommand@2
     displayName: 'Create nuget package'
