@@ -6,8 +6,7 @@ resources:
 jobs:
 
 # ------- Windows arm ---------------------------------------------------------
-- job: BuildWindows-arm
-  displayName: Windows
+- job: windows_arm
   condition: succeeded()
   pool:
     name: Hosted VS2017
@@ -41,8 +40,7 @@ jobs:
       artifactName: win-arm
     
 # ------- Windows x64 ---------------------------------------------------------
-- job: BuildWindows-x64
-  displayName: Windows
+- job: windows_x64
   condition: succeeded()
   pool:
     name: Hosted VS2017
@@ -82,8 +80,7 @@ jobs:
       artifactName: win-x64
 
 # ------- Windows x86 ---------------------------------------------------------
-- job: BuildWindows-x86
-  displayName: Windows
+- job: windows_x86
   condition: succeeded()
   pool:
     name: Hosted VS2017
@@ -133,8 +130,7 @@ jobs:
       artifactName: win-x86
 
 # ------- Linux -------------------------------------------------------------
-- job: BuildLinux
-  displayName: Linux
+- job: linux_x64
   condition: succeeded()
   pool:
     name: Hosted Ubuntu 1604
@@ -170,8 +166,7 @@ jobs:
       artifactName: linux-x64
 
 # ------- Darwin -------------------------------------------------------------
-- job: BuildDarwin
-  displayName: macOS
+- job: osx
   condition: succeeded()
   pool:
     name: Hosted macOS High Sierra
