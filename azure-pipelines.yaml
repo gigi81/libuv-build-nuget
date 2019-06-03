@@ -5,8 +5,8 @@ resources:
 
 jobs:
 
-# ------- Windows -------------------------------------------------------------
-- job: BuildWindows
+# ------- Windows arm ---------------------------------------------------------
+- job: BuildWindows-arm
   displayName: Windows
   condition: succeeded()
   pool:
@@ -20,7 +20,6 @@ jobs:
     clean: true
     submodules: true
     
-  #--------- arm ---------
   - task: CMake@1
     displayName: 'Cmake arm'
     inputs:
@@ -36,23 +35,26 @@ jobs:
       configuration: release
       clean: true
       
-  - task: CmdLine@2
-    displayName: 'Create contents directory arm'
+  - task: PublishBuildArtifacts@1
     inputs:
-      script: 'mkdir contents\runtimes\win-arm\native'
+      pathtoPublish: 'libuv\release\uv.dll'
+      artifactName: win-arm
+    
+# ------- Windows x64 ---------------------------------------------------------
+- job: BuildWindows-x64
+  displayName: Windows
+  condition: succeeded()
+  pool:
+    name: Hosted VS2017
+    demands:
+    - msbuild
+    - visualstudio
 
-  - task: CmdLine@2
-    displayName: 'Copy libuv.dll to content directory arm'
-    inputs:
-      script: 'copy libuv\release\uv.dll contents\runtimes\win-arm\native\libuv.dll'
-
-  #--------- x64 ---------
-  - task: CmdLine@2
-    displayName: 'Clean libuv'
-    inputs:
-      script: 'git clean -xfd'
-      workingDirectory: libuv
-
+  steps:
+  - checkout: self
+    clean: true
+    submodules: true
+    
   - task: CMake@1
     displayName: 'Cmake x64'
     inputs:
@@ -74,24 +76,26 @@ jobs:
       script: 'release\uv_run_tests.exe'
       workingDirectory: libuv
 
-  - task: CmdLine@2
-    displayName: 'Create contents directory x64'
+  - task: PublishBuildArtifacts@1
     inputs:
-      script: 'mkdir contents\runtimes\win-x64\native'
+      pathtoPublish: 'libuv\release\uv.dll'
+      artifactName: win-x64
 
-  - task: CmdLine@2
-    displayName: 'Copy libuv.dll to content directory x64'
-    inputs:
-      script: 'copy libuv\release\uv.dll contents\runtimes\win-x64\native\libuv.dll'
-  #--------- /x64 ---------
+# ------- Windows x86 ---------------------------------------------------------
+- job: BuildWindows-x86
+  displayName: Windows
+  condition: succeeded()
+  pool:
+    name: Hosted VS2017
+    demands:
+    - msbuild
+    - visualstudio
 
-  #--------- x86 ---------
-  - task: CmdLine@2
-    displayName: 'Clean libuv'
-    inputs:
-      script: 'git clean -xfd'
-      workingDirectory: libuv
-
+  steps:
+  - checkout: self
+    clean: true
+    submodules: true
+    
   - task: CMake@1
     displayName: 'Cmake x86'
     inputs:
@@ -122,21 +126,11 @@ jobs:
     displayName: 'Copy libuv.dll to content directory x86'
     inputs:
       script: 'copy libuv\release\uv.dll contents\runtimes\win-x86\native\libuv.dll'
-  #--------- /x86 ---------
 
-  - task: NuGetCommand@2
-    displayName: 'Create nuget package'
+  - task: PublishBuildArtifacts@1
     inputs:
-      command: pack
-      packagesToPack: Internal.libuv-Windows.nuspec
-      versioningScheme: byBuildNumber
-      
-  - task: NuGetCommand@2
-    displayName: 'NuGet push'
-    inputs:
-      command: push
-      publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
-      versioningScheme: byBuildNumber
+      pathtoPublish: 'libuv\release\uv.dll'
+      artifactName: win-x86
 
 # ------- Linux -------------------------------------------------------------
 - job: BuildLinux
@@ -170,31 +164,10 @@ jobs:
        ./uv_run_tests
       workingDirectory: libuv
       
-  - task: Bash@3
-    displayName: 'Create contents directory'
+  - task: PublishBuildArtifacts@1
     inputs:
-      targetType: inline
-      script: 'mkdir -p contents/runtimes/linux-x64/native'
-
-  - task: Bash@3
-    displayName: 'Copy libuv.so to content directory'
-    inputs:
-      targetType: inline
-      script: 'cp libuv/libuv.so contents/runtimes/linux-x64/native/libuv.so'
-      
-  - task: NuGetCommand@2
-    displayName: 'Create nuget package'
-    inputs:
-      command: pack
-      packagesToPack: Internal.libuv-Linux.nuspec
-      versioningScheme: byBuildNumber
-      
-  - task: NuGetCommand@2
-    displayName: 'NuGet push'
-    inputs:
-      command: push
-      publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
-      versioningScheme: byBuildNumber
+      pathtoPublish: 'libuv/libuv.so'
+      artifactName: linux-x64
 
 # ------- Darwin -------------------------------------------------------------
 - job: BuildDarwin
@@ -238,28 +211,7 @@ jobs:
        fi
       workingDirectory: libuv
 
-  - task: Bash@3
-    displayName: 'Create contents directory'
+  - task: PublishBuildArtifacts@1
     inputs:
-      targetType: inline
-      script: 'mkdir -p contents/runtimes/osx/native'
-
-  - task: Bash@3
-    displayName: 'Copy libuv.dylib to content directory'
-    inputs:
-      targetType: inline
-      script: 'cp libuv/Release/libuv.dylib contents/runtimes/osx/native/libuv.dylib'
-
-  - task: NuGetCommand@2
-    displayName: 'Create nuget package'
-    inputs:
-      command: pack
-      packagesToPack: Internal.libuv-Darwin.nuspec
-      versioningScheme: byBuildNumber
-
-  - task: NuGetCommand@2
-    displayName: 'NuGet push'
-    inputs:
-      command: push
-      publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
-      versioningScheme: byBuildNumber
+      pathtoPublish: 'libuv/Release/libuv.dylib'
+      artifactName: osx
