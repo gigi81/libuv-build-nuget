@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+    <metadata>
+        <id>libuv-shared</id>
+        <version>0.0.1-ignored</version>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>libuv shared library packge with native runtime for Windows (x86/x64/arm), Linux x64 and Osx x64</description>
+        <authors>Luigi Grilli</authors>
+        <license type="file">License.txt</license>
+    </metadata>
+    <files>
+        <file src="runtimes\win-arm\*.*" target="runtimes\win-arm\native" />
+        <file src="runtimes\win-x86\*.*" target="runtimes\win-x86\native" />
+        <file src="runtimes\win-x64\*.*" target="runtimes\win-x64\native" />
+        <file src="runtimes\linux-x64\*.*" target="runtimes\linux-x64\native" />
+        <file src="runtimes\osx\*.*" target="runtimes\osx\native" />
+    </files>
+</package>
