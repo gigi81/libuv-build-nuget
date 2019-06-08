@@ -214,15 +214,19 @@ jobs:
 # ------- Package ---------------------------------------------------------
 - job: package
   dependsOn:
-    - windows_arm
-    - windows_x64
-    - windows_x86
-    - linux_x64
-    - osx
+  - windows_arm
+  - windows_x64
+  - windows_x86
+  - linux_x64
+  - osx
   condition: succeeded()
   pool:
     name: Hosted
   steps:
+  - checkout: self
+    clean: true
+    submodules: true
+
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Build Artifacts'
     inputs:
@@ -232,6 +236,10 @@ jobs:
   - powershell: Get-ChildItem -Path runtimes -File -Recurse | % { Rename-Item -Path $_.PSPath -NewName $_.Name.replace("uv.dll","libuv.dll")}
     displayName: 'Rename uv.dll to libuv.dll'
   
+  - task: NuGetToolInstaller@0
+    inputs:
+      versionSpec: '5.0.2' 
+    
   - task: NuGetCommand@2
     displayName: 'NuGet pack'
     inputs:
