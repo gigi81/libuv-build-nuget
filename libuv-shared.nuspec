@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>libuv-shared</id>
-        <version>0.0.1-ignored</version>
+        <version></version>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>libuv shared library packge with native runtime for Windows (x86/x64/arm), Linux x64 and Osx x64</description>
         <authors>Luigi Grilli</authors>

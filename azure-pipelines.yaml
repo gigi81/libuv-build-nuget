@@ -251,6 +251,7 @@ jobs:
     inputs:
       command: pack
       packagesToPack: libuv-shared.nuspec
+      versioningScheme: byBuildNumber
       
   - task: NuGetCommand@2
     displayName: 'NuGet push'
