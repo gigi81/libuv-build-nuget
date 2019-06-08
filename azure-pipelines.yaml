@@ -236,6 +236,12 @@ jobs:
   - powershell: Get-ChildItem -Path runtimes -File -Recurse | % { Rename-Item -Path $_.PSPath -NewName $_.Name.replace("uv.dll","libuv.dll")}
     displayName: 'Rename uv.dll to libuv.dll'
   
+  - task: PowerShell@2
+    displayName: 'Update change log'
+    inputs:
+      targetType: filePath
+      filePath: ./changelog.ps1
+    
   - task: NuGetToolInstaller@0
     inputs:
       versionSpec: '5.0.2' 

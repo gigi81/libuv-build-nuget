@@ -7,6 +7,7 @@
         <description>libuv shared library packge with native runtime for Windows (x86/x64/arm), Linux x64 and Osx x64</description>
         <authors>Luigi Grilli</authors>
         <license type="file">license.txt</license>
+        <releaseNotes></releaseNotes>
     </metadata>
     <files>
         <file src="runtimes\win-arm\*.*" target="runtimes\win-arm\native" />
@@ -14,6 +15,6 @@
         <file src="runtimes\win-x64\*.*" target="runtimes\win-x64\native" />
         <file src="runtimes\linux-x64\*.*" target="runtimes\linux-x64\native" />
         <file src="runtimes\osx\*.*" target="runtimes\osx\native" />
-        <file src="libuv\LICENSE" target="license.txt" />
+        <file src="libuv\LICENSE" target="licenses\license.txt" />
     </files>
 </package>
