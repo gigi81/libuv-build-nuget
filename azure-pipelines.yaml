@@ -222,7 +222,7 @@ jobs:
   condition: succeeded()
   pool:
     name: Hosted
-
+  steps:
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Build Artifacts'
     inputs:
