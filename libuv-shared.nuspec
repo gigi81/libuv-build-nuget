@@ -15,6 +15,6 @@
         <file src="runtimes\win-x64\*.*" target="runtimes\win-x64\native" />
         <file src="runtimes\linux-x64\*.*" target="runtimes\linux-x64\native" />
         <file src="runtimes\osx\*.*" target="runtimes\osx\native" />
-        <file src="libuv\LICENSE" target="licenses\license.txt" />
+        <file src="libuv\LICENSE" target="license.txt" />
     </files>
 </package>
