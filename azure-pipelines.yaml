@@ -166,7 +166,7 @@ jobs:
       artifactName: linux-x64
 
 # ------- aarch64-linux-gnu --------------------------------------------------
-- job: aarch64-linux-gnu
+- job: aarch64_linux_gnu
   condition: succeeded()
   pool:
     name: Hosted Ubuntu 1604
