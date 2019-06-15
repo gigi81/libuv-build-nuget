@@ -165,6 +165,36 @@ jobs:
       pathtoPublish: 'libuv/libuv.so'
       artifactName: linux-x64
 
+# ------- aarch64-linux-gnu --------------------------------------------------
+- job: aarch64-linux-gnu
+  condition: succeeded()
+  pool:
+    name: Hosted Ubuntu 1604
+
+  container: gigi81/azurecross:aarch64-linux-gnu
+
+  steps:
+  - checkout: self
+    clean: true
+    submodules: true
+    
+  - task: CMake@1
+    displayName: 'Generate project'
+    inputs:
+      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/azp/toolchain.cmake'
+      workingDirectory: libuv
+
+  - task: CMake@1
+    displayName: 'Compile'
+    inputs:
+      cmakeArgs: '--build . --config Release'
+      workingDirectory: libuv
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'libuv/libuv.so'
+      artifactName: aarch64-linux-gnu
+
 # ------- Darwin -------------------------------------------------------------
 - job: osx
   condition: succeeded()
