@@ -4,7 +4,7 @@
         <id>libuv-shared</id>
         <version>0.0.1-ignored</version>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>libuv shared library packge with native runtime for Windows (x86/x64/arm), Linux x64 and Osx x64</description>
+        <description>libuv shared library packge with native runtime for Windows (x86/x64/arm), Linux (x64/arm64/arm/armel) and Osx x64</description>
         <authors>Luigi Grilli</authors>
         <license type="file">LICENSE</license>
         <releaseNotes></releaseNotes>
@@ -14,6 +14,9 @@
         <file src="runtimes\win-x86\*.*" target="runtimes\win-x86\native" />
         <file src="runtimes\win-x64\*.*" target="runtimes\win-x64\native" />
         <file src="runtimes\linux-x64\*.*" target="runtimes\linux-x64\native" />
+        <file src="runtimes\linux-arm64\*.*" target="runtimes\linux-arm64\native" />
+        <file src="runtimes\linux-arm\*.*" target="runtimes\linux-arm\native" />
+        <file src="runtimes\linux-armel\*.*" target="runtimes\linux-armel\native" />
         <file src="runtimes\osx\*.*" target="runtimes\osx\native" />
         <file src="libuv\LICENS*" target="" />
     </files>
