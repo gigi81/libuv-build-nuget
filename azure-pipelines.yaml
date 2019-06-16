@@ -166,7 +166,7 @@ jobs:
       artifactName: linux-x64
 
 # ------- aarch64-linux-gnu --------------------------------------------------
-- job: aarch64_linux_gnu
+- job: linux_arm64
   condition: succeeded()
   pool:
     name: Hosted Ubuntu 1604
@@ -174,26 +174,38 @@ jobs:
   container: gigi81/azurecross:aarch64-linux-gnu
 
   steps:
-  - checkout: self
-    clean: true
-    submodules: true
-    
-  - task: CMake@1
-    displayName: 'Generate project'
-    inputs:
-      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/azp/toolchain.cmake'
-      workingDirectory: libuv
+  - template: arm-steps.yml
+    parameters:
+      #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
+      rid: linux-arm64
 
-  - task: CMake@1
-    displayName: 'Compile'
-    inputs:
-      cmakeArgs: '--build . --config Release'
-      workingDirectory: libuv
+# ------- arm-linux-gnueabihf --------------------------------------------------
+- job: linux_arm
+  condition: succeeded()
+  pool:
+    name: Hosted Ubuntu 1604
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathtoPublish: 'libuv/libuv.so'
-      artifactName: aarch64-linux-gnu
+  container: gigi81/azurecross:arm-linux-gnueabihf
+
+  steps:
+  - template: arm-steps.yml
+    parameters:
+      #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
+      rid: linux-arm
+
+# ------- arm-linux-gnueabi --------------------------------------------------
+- job: linux_armel
+  condition: succeeded()
+  pool:
+    name: Hosted Ubuntu 1604
+
+  container: gigi81/azurecross:arm-linux-gnueabi
+
+  steps:
+  - template: arm-steps.yml
+    parameters:
+      #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
+      rid: linux-armel
 
 # ------- Darwin -------------------------------------------------------------
 - job: osx
@@ -249,6 +261,9 @@ jobs:
   - windows_x86
   - linux_x64
   - osx
+  - linux-arm64
+  - linux-arm
+  - linux-armel
   condition: succeeded()
   pool:
     name: Hosted
