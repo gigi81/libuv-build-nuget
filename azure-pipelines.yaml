@@ -1,4 +1,5 @@
-name: 1.0.0$(Rev:.r)
+name: 1.0.0$(Rev:.r)-alpha
+
 resources:
 - repo: self
   clean: true
@@ -299,7 +300,14 @@ jobs:
       versioningScheme: byBuildNumber
       
   - task: NuGetCommand@2
-    displayName: 'NuGet push'
+    displayName: 'NuGet push private feed'
     inputs:
       command: push
       publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
+
+#  - task: NuGetCommand@2
+#    displayName: 'NuGet push nuget.org feed'
+#    inputs:
+#      command: push
+#      nuGetFeedType: external
+#      publishFeedCredentials: nuget.org
