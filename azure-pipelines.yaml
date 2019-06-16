@@ -1,4 +1,4 @@
-name: 1.21.0$(Rev:.r)-alpha
+name: 1.23.2$(Rev:.r)-alpha
 
 variables:
   packageVersion: $(Build.BuildNumber)
