@@ -56,7 +56,14 @@ jobs:
   - checkout: self
     clean: true
     submodules: true
-    
+
+  - task: CmdLine@2
+    displayName: 'Apply patches'
+    inputs:
+      script: |
+       "C:\Program Files\Git\usr\bin\patch.exe" -i ..\patches\0001-build-fix-uv_test-shared-uv-Windows-cmake-build.patch
+      workingDirectory: libuv
+
   - task: CMake@1
     displayName: 'Cmake x64'
     inputs:
@@ -97,6 +104,13 @@ jobs:
     clean: true
     submodules: true
     
+  - task: CmdLine@2
+    displayName: 'Apply patches'
+    inputs:
+      script: |
+       "C:\Program Files\Git\usr\bin\patch.exe" -i ..\patches\0001-build-fix-uv_test-shared-uv-Windows-cmake-build.patch
+      workingDirectory: libuv
+
   - task: CMake@1
     displayName: 'Cmake x86'
     inputs:
