@@ -261,9 +261,9 @@ jobs:
   - windows_x86
   - linux_x64
   - osx
-  - linux-arm64
-  - linux-arm
-  - linux-armel
+  - linux_arm64
+  - linux_arm
+  - linux_armel
   condition: succeeded()
   pool:
     name: Hosted
