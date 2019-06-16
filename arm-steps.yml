@@ -3,22 +3,22 @@ parameters:
 
 steps:
   - checkout: self
-  clean: true
-  submodules: true
+    clean: true
+    submodules: true
   
   - task: CMake@1
-  displayName: 'Generate project'
-  inputs:
-    cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE'
-    workingDirectory: libuv
+    displayName: 'Generate project'
+    inputs:
+      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE'
+      workingDirectory: libuv
   
   - task: CMake@1
-  displayName: 'Compile'
-  inputs:
-    cmakeArgs: '--build . --config Release'
-    workingDirectory: libuv
+    displayName: 'Compile'
+    inputs:
+      cmakeArgs: '--build . --config Release'
+      workingDirectory: libuv
   
   - task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: 'libuv/libuv.so'
-    artifactName: ${{ parameters.rid }}
+    inputs:
+      pathtoPublish: 'libuv/libuv.so'
+      artifactName: ${{ parameters.rid }}
