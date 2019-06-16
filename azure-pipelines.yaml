@@ -1,4 +1,4 @@
-name: 1.0.0$(Rev:.r)-alpha
+name: 1.10.2$(Rev:.r)-alpha
 
 variables:
   packageVersion: $(Build.BuildNumber)
@@ -332,9 +332,9 @@ jobs:
       command: push
       publishVstsFeed: '/be2f0cee-544d-407b-b4bf-6dcb58c6e898'
 
-#  - task: NuGetCommand@2
-#    displayName: 'NuGet push nuget.org feed'
-#    inputs:
-#      command: push
-#      nuGetFeedType: external
-#      publishFeedCredentials: nuget.org
+  - task: NuGetCommand@2
+    displayName: 'NuGet push nuget.org feed'
+    inputs:
+      command: push
+      nuGetFeedType: external
+      publishFeedCredentials: nuget.org
