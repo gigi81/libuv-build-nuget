@@ -9,7 +9,7 @@ steps:
   - task: CMake@1
     displayName: 'Generate project'
     inputs:
-      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/toolchain/toolchain.cmake'
+      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/azp/toolchain.cmake'
       workingDirectory: libuv
   
   - task: CMake@1
