@@ -57,6 +57,30 @@ jobs:
     clean: true
     submodules: true
 
+  - task: PowerShell@2
+    displayName: 'Set build number'
+    inputs:
+      targetType: inline
+      workingDirectory: libuv/include/uv
+      script: |
+       $v = @{}
+       $path = Join-Path (Get-Location) 'version.h'
+       foreach($line in Get-Content -Path $path)
+       {
+           $m = [regex]::Match($line, '#define[\t\s]+([1-9a-zA-Z_]+)[\t\s]+(.*)')
+           if($m.Success)
+           {
+               $v.Add($m.Groups[1].Value, $m.Groups[2].Value.Trim())
+           }
+       }
+       if($v['UV_VERSION_IS_RELEASE'] -ne '1')
+       {
+           $postfix = '-beta'
+       }
+       $version = "$($v['UV_VERSION_MAJOR']).$($v['UV_VERSION_MINOR']).$($v['UV_VERSION_PATCH']).($Env:BUILD_BUILDNUMBER)$postfix"
+       Write-Host "##vso[build.updatebuildnumber]$version"
+       Write-Host "##vso[task.setvariable variable=packageVersion]$version"
+
   - task: CmdLine@2
     displayName: 'Apply patches'
     inputs:
