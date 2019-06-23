@@ -5,7 +5,7 @@ steps:
   - checkout: self
     clean: true
     submodules: true
-  
+
   - task: Bash@3
     displayName: 'Generate project'
     inputs:
@@ -21,10 +21,20 @@ steps:
       workingDirectory: libuv
 
   - task: Bash@3
+    displayName: 'Configure qemu'
+    inputs:
+      targetType: inline
+      script: |
+       sudo apt-get install binfmt-support
+       wget https://raw.githubusercontent.com/qemu/qemu/master/scripts/qemu-binfmt-conf.sh
+       chmod +x qemu-binfmt-conf.sh
+       ./qemu-binfmt-conf.sh --systemd aarch64
+
+  - task: Bash@3
     displayName: 'Run tests (on qemu)'
     inputs:
       targetType: inline
-      script: ${{ parameters.qemu }} ./uv_run_tests
+      script: ./uv_run_tests
       workingDirectory: libuv
       
   - task: PublishBuildArtifacts@1
