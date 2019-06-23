@@ -196,6 +196,7 @@ jobs:
     parameters:
       #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
       rid: linux-arm64
+      qemu: qemu-aarch64
 
 # ------- arm-linux-gnueabihf --------------------------------------------------
 - job: linux_arm
@@ -210,6 +211,7 @@ jobs:
     parameters:
       #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
       rid: linux-arm
+      qemu: qemu-arm
 
 # ------- arm-linux-gnueabi --------------------------------------------------
 - job: linux_armel
@@ -224,6 +226,7 @@ jobs:
     parameters:
       #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
       rid: linux-armel
+      qemu: qemu-arm
 
 # ------- Darwin -------------------------------------------------------------
 - job: osx

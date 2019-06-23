@@ -6,18 +6,27 @@ steps:
     clean: true
     submodules: true
   
-  - task: CMake@1
+  - task: Bash@3
     displayName: 'Generate project'
     inputs:
-      cmakeArgs: '. -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/azp/toolchain.cmake'
+      targetType: inline
+      script: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE
       workingDirectory: libuv
-  
-  - task: CMake@1
+
+  - task: Bash@3
     displayName: 'Compile'
     inputs:
-      cmakeArgs: '--build . --config Release'
+      targetType: inline
+      script: cmake --build . --config Release
       workingDirectory: libuv
-  
+
+  - task: Bash@3
+    displayName: 'Run tests (on qemu)'
+    inputs:
+      targetType: inline
+      script: ${{ parameters.qemu }} ./uv_run_tests
+      workingDirectory: libuv
+      
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: 'libuv/libuv.so'
