@@ -28,7 +28,7 @@ steps:
        sudo apt-get install binfmt-support
        wget https://raw.githubusercontent.com/qemu/qemu/master/scripts/qemu-binfmt-conf.sh
        chmod +x qemu-binfmt-conf.sh
-       ./qemu-binfmt-conf.sh --systemd aarch64
+       sudo ./qemu-binfmt-conf.sh --systemd aarch64
 
   - task: Bash@3
     displayName: 'Run tests (on qemu)'
