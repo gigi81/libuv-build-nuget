@@ -248,7 +248,7 @@ jobs:
     parameters:
       #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
       rid: linux-armel
-      qemu: 'qemu-arm -cpu arm1176'
+      qemu: 'qemu-arm'
 
 # ------- Darwin -------------------------------------------------------------
 - job: osx
