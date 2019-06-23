@@ -173,9 +173,7 @@ jobs:
     displayName: 'Run tests'
     inputs:
       targetType: inline
-      script: |
-       ls .
-       ./uv_run_tests
+      script: ./uv_run_tests
       workingDirectory: libuv
       
   - task: PublishBuildArtifacts@1
@@ -211,7 +209,7 @@ jobs:
     parameters:
       #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
       rid: linux-arm
-      qemu: qemu-arm
+      qemu: 'qemu-arm -cpu cortex-a8'
 
 # ------- arm-linux-gnueabi --------------------------------------------------
 - job: linux_armel
@@ -226,7 +224,7 @@ jobs:
     parameters:
       #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
       rid: linux-armel
-      qemu: qemu-arm
+      qemu: 'qemu-arm -cpu arm1176'
 
 # ------- Darwin -------------------------------------------------------------
 - job: osx
