@@ -77,7 +77,7 @@ jobs:
        {
            $postfix = '-beta'
        }
-       $version = "$($v['UV_VERSION_MAJOR']).$($v['UV_VERSION_MINOR']).$($v['UV_VERSION_PATCH']).($Env:BUILD_BUILDNUMBER)$postfix"
+       $version = "$($v['UV_VERSION_MAJOR']).$($v['UV_VERSION_MINOR']).$($v['UV_VERSION_PATCH']).$($Env:BUILD_BUILDID)$postfix"
        Write-Host "##vso[build.updatebuildnumber]$version"
        Write-Host "##vso[task.setvariable variable=packageVersion]$version"
 
