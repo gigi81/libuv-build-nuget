@@ -81,13 +81,6 @@ jobs:
        Write-Host "##vso[build.updatebuildnumber]$version"
        Write-Host "##vso[task.setvariable variable=packageVersion]$version"
 
-  - task: CmdLine@2
-    displayName: 'Apply patches'
-    inputs:
-      script: |
-       "C:\Program Files\Git\usr\bin\patch.exe" -i ..\patches\0001-build-fix-uv_test-shared-uv-Windows-cmake-build.patch
-      workingDirectory: libuv
-
   - task: CMake@1
     displayName: 'Cmake x64'
     inputs:
@@ -128,13 +121,6 @@ jobs:
     clean: true
     submodules: true
     
-  - task: CmdLine@2
-    displayName: 'Apply patches'
-    inputs:
-      script: |
-       "C:\Program Files\Git\usr\bin\patch.exe" -i ..\patches\0001-build-fix-uv_test-shared-uv-Windows-cmake-build.patch
-      workingDirectory: libuv
-
   - task: CMake@1
     displayName: 'Cmake x86'
     inputs:
@@ -276,19 +262,7 @@ jobs:
     displayName: 'Run tests'
     inputs:
       targetType: inline
-      script: |
-       Release/uv_run_tests
-       if test $? -eq 0
-       then
-        echo "All test succeeded"
-        exit 0
-       elif test $? -le 2
-       then
-        echo "$? tests failed, known issues"
-        exit 0
-       else
-        echo "$? tests failed"
-       fi
+      script: Release/uv_run_tests
       workingDirectory: libuv
 
   - task: PublishBuildArtifacts@1
