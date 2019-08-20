@@ -35,6 +35,7 @@ jobs:
       platform: arm
       configuration: release
       clean: true
+      msbuildArgs: /m
       
   - task: PublishBuildArtifacts@1
     inputs:
@@ -93,6 +94,7 @@ jobs:
       platform: x64
       configuration: release
       clean: true
+      msbuildArgs: /m
 
   - task: CmdLine@2
     displayName: 'Run tests x64'
@@ -133,6 +135,7 @@ jobs:
       platform: WIN32
       configuration: release
       clean: true
+      msbuildArgs: /m
 
   - task: CmdLine@2
     displayName: 'Run tests x86'
