@@ -26,17 +26,18 @@ steps:
       targetType: inline
       script: |
        ${{ parameters.qemu }} ./uv_run_tests
-       if test $? -eq 0
+       ret=$?
+       if test $ret -eq 0
        then
         echo "All test succeeded"
         exit 0
-       elif test $? -le 6
+       elif test $ret -le 6
        then
-        echo "$? tests failed, known issues"
-        ##vso[task.complete result=SucceededWithIssues;]DONE
+        echo "$ret tests failed, known issues"
+        echo "##vso[task.complete result=SucceededWithIssues;]DONE"
         exit 0
        else
-        echo "$? tests failed"
+        echo "$ret tests failed"
        fi
 
       workingDirectory: libuv
