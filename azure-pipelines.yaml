@@ -241,7 +241,7 @@ jobs:
 - job: osx
   condition: succeeded()
   pool:
-    name: Hosted macOS High Sierra
+    vmImage: macOS-latest
   steps:
   - checkout: self
     clean: true
