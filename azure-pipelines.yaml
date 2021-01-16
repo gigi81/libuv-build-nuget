@@ -21,6 +21,15 @@ jobs:
     clean: true
     submodules: true
     
+  - task: PowerShell@2
+    displayName: 'Fix cmake'
+    inputs:
+      targetType: inline
+      workingDirectory: libuv
+      #add shell32 link to tests build becasue of missing symbol
+      script: |
+       ((Get-Content -path 'CMakeLists.txt' -Raw) -replace 'list(APPEND uv_test_libraries ws2_32)','list(APPEND uv_test_libraries ws2_32 shell32)') | Set-Content -Path 'CMakeLists.txt'
+
   - task: CMake@1
     displayName: 'Cmake arm'
     inputs:
