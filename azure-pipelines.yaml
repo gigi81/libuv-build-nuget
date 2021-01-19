@@ -22,13 +22,13 @@ jobs:
     submodules: true
     
   - task: PowerShell@2
-    displayName: 'Fix cmake'
+    displayName: 'Fix CMakeLists.txt'
     inputs:
       targetType: inline
       workingDirectory: libuv
       #add shell32 link to tests build becasue of missing symbol
       script: |
-       ((Get-Content -path 'CMakeLists.txt' -Raw) -replace 'list(APPEND uv_test_libraries ws2_32)','list(APPEND uv_test_libraries ws2_32 shell32)') | Set-Content -Path 'CMakeLists.txt'
+       ((Get-Content -path 'CMakeLists.txt' -Raw) -replace 'if(WIN32)',"if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") | Set-Content -Path 'CMakeLists.txt'
 
   - task: CMake@1
     displayName: 'Cmake arm'
@@ -51,6 +51,50 @@ jobs:
       pathtoPublish: 'libuv\release\uv.dll'
       artifactName: win-arm
     
+# ------- Windows arm ---------------------------------------------------------
+- job: windows_arm64
+  condition: succeeded()
+  pool:
+    name: Hosted VS2017
+    demands:
+    - msbuild
+    - visualstudio
+
+  steps:
+  - checkout: self
+    clean: true
+    submodules: true
+    
+  - task: PowerShell@2
+    displayName: 'Fix CMakeLists.txt'
+    inputs:
+      targetType: inline
+      workingDirectory: libuv
+      #add shell32 link to tests build becasue of missing symbol
+      script: |
+       ((Get-Content -path 'CMakeLists.txt' -Raw) -replace 'if(WIN32)',"if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") | Set-Content -Path 'CMakeLists.txt'
+
+  - task: CMake@1
+    displayName: 'Cmake arm'
+    inputs:
+      cmakeArgs: '. -G "Visual Studio 15 2017" -A ARM64'
+      workingDirectory: libuv
+
+  - task: VSBuild@1
+    displayName: 'Build solution libuv.sln arm'
+    inputs:
+      solution: libuv\libuv.sln
+      vsVersion: 15.0
+      platform: arm64
+      configuration: release
+      clean: true
+      msbuildArgs: /m
+      
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'libuv\release\uv.dll'
+      artifactName: win-arm64
+      
 # ------- Windows x64 ---------------------------------------------------------
 - job: windows_x64
   condition: succeeded()
@@ -298,6 +342,7 @@ jobs:
 - job: package
   dependsOn:
   - windows_arm
+  - windows_arm64
   - windows_x64
   - windows_x86
   - linux_x64
