@@ -28,7 +28,7 @@ jobs:
       workingDirectory: libuv
       #add shell32 link to tests build becasue of missing symbol
       script: |
-       ((Get-Content -path 'CMakeLists.txt' -Raw) -replace 'if(WIN32)',"if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") | Set-Content -Path 'CMakeLists.txt'
+       (Get-Content -path 'CMakeLists.txt' -Raw) | %{ $_.Replace('if(WIN32)', "if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") } | Set-Content -Path 'CMakeLists.txt'
 
   - task: CMake@1
     displayName: 'Cmake arm'
@@ -72,7 +72,7 @@ jobs:
       workingDirectory: libuv
       #add shell32 link to tests build becasue of missing symbol
       script: |
-       ((Get-Content -path 'CMakeLists.txt' -Raw) -replace 'if(WIN32)',"if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") | Set-Content -Path 'CMakeLists.txt'
+       (Get-Content -path 'CMakeLists.txt' -Raw) | %{ $_.Replace('if(WIN32)', "if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") } | Set-Content -Path 'CMakeLists.txt'
 
   - task: CMake@1
     displayName: 'Cmake arm'
