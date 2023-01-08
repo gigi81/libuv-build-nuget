@@ -12,9 +12,6 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: 'windows-latest'
-    demands:
-    - msbuild
-    - visualstudio
 
   steps:
   - checkout: self
@@ -40,7 +37,7 @@ jobs:
     displayName: 'Build solution libuv.sln arm'
     inputs:
       solution: libuv\libuv.sln
-      vsVersion: 15.0
+      vsVersion: 17.0
       platform: arm
       configuration: release
       clean: true
@@ -56,9 +53,6 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: 'windows-latest'
-    demands:
-    - msbuild
-    - visualstudio
 
   steps:
   - checkout: self
@@ -84,7 +78,7 @@ jobs:
     displayName: 'Build solution libuv.sln arm'
     inputs:
       solution: libuv\libuv.sln
-      vsVersion: 15.0
+      vsVersion: 17.0
       platform: arm64
       configuration: release
       clean: true
@@ -100,9 +94,6 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: 'windows-latest'
-    demands:
-    - msbuild
-    - visualstudio
 
   steps:
   - checkout: self
@@ -143,7 +134,7 @@ jobs:
     displayName: 'Build solution libuv.sln x64'
     inputs:
       solution: libuv\libuv.sln
-      vsVersion: 15.0
+      vsVersion: 17.0
       platform: x64
       configuration: release
       clean: true
@@ -165,9 +156,6 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: 'windows-latest'
-    demands:
-    - msbuild
-    - visualstudio
 
   steps:
   - checkout: self
@@ -184,7 +172,7 @@ jobs:
     displayName: 'Build solution libuv.sln x86'
     inputs:
       solution: libuv\libuv.sln
-      vsVersion: 15.0
+      vsVersion: 17.0
       platform: WIN32
       configuration: release
       clean: true
