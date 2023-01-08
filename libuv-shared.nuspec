@@ -8,10 +8,8 @@
         <authors>Luigi Grilli</authors>
         <license type="file">LICENSE</license>
         <releaseNotes></releaseNotes>
-        <PackageProjectUrl>https://luigigrilli.visualstudio.com/libuv</PackageProjectUrl>
-        <RepositoryUrl>https://luigigrilli.visualstudio.com/libuv/_git/libuv-build-nuget</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+        <projectUrl>https://luigigrilli.visualstudio.com/libuv</projectUrl>
+        <repository type="git" url="https://luigigrilli.visualstudio.com/libuv/_git/libuv-build-nuget" />
     </metadata>
     <files>
         <file src="runtimes\win-arm\*.*" target="runtimes\win-arm\native" />
