@@ -11,7 +11,7 @@ jobs:
 - job: windows_arm
   condition: succeeded()
   pool:
-    name: Hosted VS2017
+    vmImage: 'windows-latest'
     demands:
     - msbuild
     - visualstudio
@@ -51,11 +51,11 @@ jobs:
       pathtoPublish: 'libuv\release\uv.dll'
       artifactName: win-arm
     
-# ------- Windows arm ---------------------------------------------------------
+# ------- Windows arm64 ---------------------------------------------------------
 - job: windows_arm64
   condition: succeeded()
   pool:
-    name: Hosted VS2017
+    vmImage: 'windows-latest'
     demands:
     - msbuild
     - visualstudio
@@ -99,7 +99,7 @@ jobs:
 - job: windows_x64
   condition: succeeded()
   pool:
-    name: Hosted VS2017
+    vmImage: 'windows-latest'
     demands:
     - msbuild
     - visualstudio
@@ -164,7 +164,7 @@ jobs:
 - job: windows_x86
   condition: succeeded()
   pool:
-    name: Hosted VS2017
+    vmImage: 'windows-latest'
     demands:
     - msbuild
     - visualstudio
@@ -215,7 +215,7 @@ jobs:
 - job: linux_x64
   condition: succeeded()
   pool:
-    name: Hosted Ubuntu 1604
+    vmImage: 'ununtu-latest'
   steps:
   - checkout: self
     clean: true
@@ -249,7 +249,7 @@ jobs:
 - job: linux_arm64
   condition: succeeded()
   pool:
-    name: Hosted Ubuntu 1604
+    vmImage: 'ununtu-latest'
 
   container: gigi81/azurecross:aarch64-linux-gnu
 
@@ -264,7 +264,7 @@ jobs:
 - job: linux_arm
   condition: succeeded()
   pool:
-    name: Hosted Ubuntu 1604
+    vmImage: 'ununtu-latest'
 
   container: gigi81/azurecross:arm-linux-gnueabihf
 
@@ -279,7 +279,7 @@ jobs:
 - job: linux_armel
   condition: succeeded()
   pool:
-    name: Hosted Ubuntu 1604
+    vmImage: 'ununtu-latest'
 
   container: gigi81/azurecross:arm-linux-gnueabi
 
