@@ -215,7 +215,7 @@ jobs:
 - job: linux_x64
   condition: succeeded()
   pool:
-    vmImage: 'ununtu-latest'
+    vmImage: 'ubuntu-latest'
   steps:
   - checkout: self
     clean: true
@@ -249,7 +249,7 @@ jobs:
 - job: linux_arm64
   condition: succeeded()
   pool:
-    vmImage: 'ununtu-latest'
+    vmImage: 'ubuntu-latest'
 
   container: gigi81/azurecross:aarch64-linux-gnu
 
@@ -264,7 +264,7 @@ jobs:
 - job: linux_arm
   condition: succeeded()
   pool:
-    vmImage: 'ununtu-latest'
+    vmImage: 'ubuntu-latest'
 
   container: gigi81/azurecross:arm-linux-gnueabihf
 
@@ -279,7 +279,7 @@ jobs:
 - job: linux_armel
   condition: succeeded()
   pool:
-    vmImage: 'ununtu-latest'
+    vmImage: 'ubuntu-latest'
 
   container: gigi81/azurecross:arm-linux-gnueabi
 
