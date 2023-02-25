@@ -279,7 +279,7 @@ jobs:
       qemu: 'qemu-arm'
 
 # ------- osx x64 -------------------------------------------------------------
-- job: osx-x64
+- job: osx_x64
   condition: succeeded()
   pool:
     vmImage: macOS-latest
@@ -290,7 +290,7 @@ jobs:
         arch: 'x86_64'
 
 # ------- osx arm64 -------------------------------------------------------------
-- job: osx-arm64
+- job: osx_arm64
   condition: succeeded()
   pool:
     vmImage: macOS-latest
@@ -308,8 +308,8 @@ jobs:
   - windows_x64
   - windows_x86
   - linux_x64
-  - osx-x64
-  - osx-arm64
+  - osx_x64
+  - osx_arm64
   - linux_arm64
   - linux_arm
   - linux_armel
