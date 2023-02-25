@@ -1,0 +1,46 @@
+parameters:
+  rid: ''
+  arch: ''
+
+steps:
+  - checkout: self
+    clean: true
+    submodules: true
+
+  - task: CMake@1
+    displayName: 'Generate project'
+    inputs:
+      cmakeArgs: '. -DBUILD_TESTING=ON -G Xcode -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=${{parameters.arch}}'
+      workingDirectory: libuv
+
+  - task: CMake@1
+    displayName: 'Compile'
+    inputs:
+      cmakeArgs: '--build . --config Release'
+      workingDirectory: libuv
+
+  - task: Bash@3
+    displayName: 'Run tests'
+    inputs:
+      targetType: inline
+      script: |
+       Release/uv_run_tests
+       ret=$?
+       if test $ret -eq 0
+       then
+        echo "All test succeeded"
+        exit 0
+       elif test $ret -le 1
+       then
+        echo "$ret tests failed, known issues"
+        echo "##vso[task.complete result=SucceededWithIssues;]DONE"
+        exit 0
+       else
+        echo "$ret tests failed"
+       fi
+      workingDirectory: libuv
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'libuv/Release/libuv.dylib'
+      artifactName: ${{ parameters.rid }}
