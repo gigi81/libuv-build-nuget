@@ -8,12 +8,12 @@
         <authors>Luigi Grilli</authors>
         <license type="file">LICENSE</license>
         <releaseNotes></releaseNotes>
-        <projectUrl>https://luigigrilli.visualstudio.com/libuv</projectUrl>
-        <repository type="git" url="https://luigigrilli.visualstudio.com/libuv/_git/libuv-build-nuget" />
+        <projectUrl>https://github.com/gigi81/libuv-build-nuget</projectUrl>
+        <repository type="git" url="https://github.com/gigi81/libuv-build-nuget.git" />
     </metadata>
     <files>
         <file src="runtimes\win-arm\*.*" target="runtimes\win-arm\native" />
-		<file src="runtimes\win-arm64\*.*" target="runtimes\win-arm64\native" />
+        <file src="runtimes\win-arm64\*.*" target="runtimes\win-arm64\native" />
         <file src="runtimes\win-x86\*.*" target="runtimes\win-x86\native" />
         <file src="runtimes\win-x64\*.*" target="runtimes\win-x64\native" />
         <file src="runtimes\linux-x64\*.*" target="runtimes\linux-x64\native" />
