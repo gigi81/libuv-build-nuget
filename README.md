@@ -3,11 +3,11 @@
 
 # Introduction
 This is a project containing an ADO build pipeline to produce the nuget package for libuv.
-The package contains the native libraries for a number of platforms and operating systems.
+The package contains the native libuv library for Windows (x64/x86/arm/arm64), Linux (x64/arm64/arm/armel) and Osx (x64/arm64)
 
 # Install Package
 You can install the package in a dotnet project with the command
 
-```
+```bash
 dotnet install libuv-shared
 ```
