@@ -204,6 +204,9 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: 'ubuntu-latest'
+    
+  container: netdata/builder
+    
   steps:
   - checkout: self
     clean: true
