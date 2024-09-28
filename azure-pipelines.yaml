@@ -205,8 +205,6 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
     
-  container: netdata/builder:latest
-    
   steps:
   - checkout: self
     clean: true
