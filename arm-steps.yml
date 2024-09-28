@@ -10,7 +10,7 @@ steps:
     displayName: 'Generate project'
     inputs:
       targetType: inline
-      script: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE
+      script: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release # -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE
       workingDirectory: libuv
 
   - task: Bash@3
