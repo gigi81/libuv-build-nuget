@@ -240,12 +240,12 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
 
-  container: gigi81/azurecross:aarch64-linux-gnu
+  container: dockcross/linux-arm64:latest
 
   steps:
   - template: arm-steps.yml
     parameters:
-      #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
+      # https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
       rid: linux-arm64
       qemu: qemu-aarch64
 
@@ -255,29 +255,14 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
 
-  container: gigi81/azurecross:arm-linux-gnueabihf
+  container: dockcross/linux-armv5:latest
 
   steps:
   - template: arm-steps.yml
     parameters:
-      #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
+      # https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
       rid: linux-arm
       qemu: 'qemu-arm -cpu cortex-a8'
-
-# ------- arm-linux-gnueabi --------------------------------------------------
-- job: linux_armel
-  condition: succeeded()
-  pool:
-    vmImage: 'ubuntu-latest'
-
-  container: gigi81/azurecross:arm-linux-gnueabi
-
-  steps:
-  - template: arm-steps.yml
-    parameters:
-      #https://github.com/dotnet/corefx/blob/master/pkg/Microsoft.NETCore.Platforms/runtime.json
-      rid: linux-armel
-      qemu: 'qemu-arm'
 
 # ------- osx x64 -------------------------------------------------------------
 - job: osx_x64
