@@ -25,7 +25,7 @@ steps:
     inputs:
       targetType: inline
       script: |
-       ${{ parameters.qemu }} ./uv_run_tests
+       $CMAKE_CROSSCOMPILING_EMULATOR ./uv_run_tests
        ret=$?
        if test $ret -eq 0
        then

@@ -247,7 +247,6 @@ jobs:
     parameters:
       # https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
       rid: linux-arm64
-      qemu: qemu-aarch64
 
 # ------- arm-linux-gnueabihf --------------------------------------------------
 - job: linux_arm
@@ -262,7 +261,6 @@ jobs:
     parameters:
       # https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json
       rid: linux-arm
-      qemu: 'qemu-arm -cpu cortex-a8'
 
 # ------- osx x64 -------------------------------------------------------------
 - job: osx_x64
