@@ -298,7 +298,6 @@ jobs:
   - osx_arm64
   - linux_arm64
   - linux_arm
-  - linux_armel
   condition: succeeded()
   pool:
     name: Hosted
