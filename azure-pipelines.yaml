@@ -266,7 +266,7 @@ jobs:
 - job: osx_x64
   condition: succeeded()
   pool:
-    vmImage: macOS-latest
+    vmImage: macOS-13
   steps:
     - template: osx-steps.yaml
       parameters:
@@ -277,7 +277,7 @@ jobs:
 - job: osx_arm64
   condition: succeeded()
   pool:
-    vmImage: macOS-latest
+    vmImage: macOS-14
   steps:
     - template: osx-steps.yaml
       parameters:
