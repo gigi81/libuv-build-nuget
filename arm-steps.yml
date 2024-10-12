@@ -11,7 +11,7 @@ steps:
     displayName: 'Generate project'
     inputs:
       targetType: inline
-      script: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release # -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE
+      script: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release
       workingDirectory: libuv
 
   - task: Bash@3
@@ -26,6 +26,7 @@ steps:
     inputs:
       targetType: inline
       script: |
+       echo "Running on ${{ parameters.qemu }}"
        ${{ parameters.qemu }} ./uv_run_tests
        ret=$?
        if test $ret -eq 0
@@ -39,6 +40,7 @@ steps:
         exit 0
        else
         echo "$ret tests failed"
+        exit $ret
        fi
 
       workingDirectory: libuv

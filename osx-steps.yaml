@@ -37,6 +37,7 @@ steps:
         exit 0
        else
         echo "$ret tests failed"
+        exit $ret
        fi
       workingDirectory: libuv
 
