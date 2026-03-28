@@ -157,6 +157,7 @@ jobs:
       - name: Run tests (on qemu)
         working-directory: libuv
         run: |
+          file ./uv_run_tests
           useradd -m testrunner
           dir=$(pwd)
           chown -R testrunner:testrunner "$dir"
@@ -201,6 +202,7 @@ jobs:
       - name: Run tests (on qemu)
         working-directory: libuv
         run: |
+          file ./uv_run_tests
           useradd -m testrunner
           dir=$(pwd)
           chown -R testrunner:testrunner "$dir"
