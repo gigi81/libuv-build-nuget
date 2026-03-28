@@ -10,7 +10,7 @@ jobs:
   windows_arm64:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -28,7 +28,7 @@ jobs:
         working-directory: libuv
         run: cmake --build . --config Release
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: win-arm64
           path: libuv\release\uv.dll
@@ -39,7 +39,7 @@ jobs:
     outputs:
       packageVersion: ${{ steps.version.outputs.packageVersion }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -78,7 +78,7 @@ jobs:
         working-directory: libuv
         run: release\uv_run_tests.exe
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: win-x64
           path: libuv\release\uv.dll
@@ -87,7 +87,7 @@ jobs:
   windows_x86:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -103,7 +103,7 @@ jobs:
         working-directory: libuv
         run: release\uv_run_tests.exe
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: win-x86
           path: libuv\release\uv.dll
@@ -112,7 +112,7 @@ jobs:
   linux_x64:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -128,7 +128,7 @@ jobs:
         working-directory: libuv
         run: ./uv_run_tests
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-x64
           path: libuv/libuv.so
@@ -137,7 +137,7 @@ jobs:
   linux_arm64:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -166,13 +166,13 @@ jobs:
             echo "All tests succeeded"
           elif test $ret -le 6
           then
-            echo "$ret tests failed, known issues"
+            echo "::warning::$ret tests failed, known issues"
           else
             echo "$ret tests failed"
             exit $ret
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-arm64
           path: libuv/libuv.so
@@ -181,7 +181,7 @@ jobs:
   linux_arm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -210,13 +210,13 @@ jobs:
             echo "All tests succeeded"
           elif test $ret -le 6
           then
-            echo "$ret tests failed, known issues"
+            echo "::warning::$ret tests failed, known issues"
           else
             echo "$ret tests failed"
             exit $ret
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-arm
           path: libuv/libuv.so
@@ -225,7 +225,7 @@ jobs:
   osx_x64:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -249,13 +249,13 @@ jobs:
             echo "All tests succeeded"
           elif test $ret -le 5
           then
-            echo "$ret tests failed, known issues"
+            echo "::warning::$ret tests failed, known issues"
           else
             echo "$ret tests failed"
             exit $ret
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: osx-x64
           path: libuv/Release/libuv.dylib
@@ -264,7 +264,7 @@ jobs:
   osx_arm64:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -288,13 +288,13 @@ jobs:
             echo "All tests succeeded"
           elif test $ret -le 5
           then
-            echo "$ret tests failed, known issues"
+            echo "::warning::$ret tests failed, known issues"
           else
             echo "$ret tests failed"
             exit $ret
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: osx-arm64
           path: libuv/Release/libuv.dylib
@@ -302,6 +302,8 @@ jobs:
   # ------- Package -----------------------------------------------------------
   package:
     runs-on: windows-latest
+    permissions:
+      packages: write
     needs:
       - windows_arm64
       - windows_x64
@@ -312,11 +314,11 @@ jobs:
       - osx_x64
       - osx_arm64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: runtimes
 
@@ -351,7 +353,7 @@ jobs:
           $xml.package.metadata.releaseNotes = $changeLog
           $xml.Save($nuspec)
 
-      - uses: nuget/setup-nuget@v2
+      - uses: nuget/setup-nuget@v3
 
       - name: NuGet pack
         run: nuget pack libuv-shared.nuspec -Version ${{ needs.windows_x64.outputs.packageVersion }}
