@@ -6,34 +6,6 @@ on:
 
 jobs:
 
-  # ------- Windows arm -------------------------------------------------------
-  windows_arm:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-
-      - name: Fix CMakeLists.txt
-        working-directory: libuv
-        shell: pwsh
-        run: |
-          (Get-Content -path 'CMakeLists.txt' -Raw) | %{ $_.Replace('if(WIN32)', "if(CMAKE_GENERATOR_PLATFORM MATCHES `"ARM|ARM64`")`r`n  list(APPEND uv_libraries shell32)`r`nlist(APPEND uv_test_libraries shell32)`r`nendif()`r`n`r`nif(WIN32)") } | Set-Content -Path 'CMakeLists.txt'
-
-      - uses: microsoft/setup-msbuild@v2
-
-      - name: CMake arm
-        working-directory: libuv
-        run: cmake . -G "Visual Studio 17 2022" -A ARM
-
-      - name: Build libuv.sln arm
-        run: msbuild libuv\libuv.sln /p:Platform=arm /p:Configuration=Release /m /t:Clean,Build
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: win-arm
-          path: libuv\release\uv.dll
-
   # ------- Windows arm64 -----------------------------------------------------
   windows_arm64:
     runs-on: windows-latest
@@ -185,8 +157,10 @@ jobs:
       - name: Run tests (on qemu)
         working-directory: libuv
         run: |
-          echo "Running on /usr/bin/qemu-aarch64"
-          /usr/bin/qemu-aarch64 ./uv_run_tests
+          useradd -m testrunner
+          dir=$(pwd)
+          chown -R testrunner:testrunner "$dir"
+          su testrunner -c "/usr/bin/qemu-aarch64 $dir/uv_run_tests"
           ret=$?
           if test $ret -eq 0
           then
@@ -227,8 +201,10 @@ jobs:
       - name: Run tests (on qemu)
         working-directory: libuv
         run: |
-          echo "Running on /usr/bin/qemu-arm"
-          /usr/bin/qemu-arm ./uv_run_tests
+          useradd -m testrunner
+          dir=$(pwd)
+          chown -R testrunner:testrunner "$dir"
+          su testrunner -c "/usr/bin/qemu-arm $dir/uv_run_tests"
           ret=$?
           if test $ret -eq 0
           then
@@ -250,7 +226,7 @@ jobs:
 
   # ------- macOS x64 ---------------------------------------------------------
   osx_x64:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -330,7 +306,6 @@ jobs:
   package:
     runs-on: windows-latest
     needs:
-      - windows_arm
       - windows_arm64
       - windows_x64
       - windows_x86
