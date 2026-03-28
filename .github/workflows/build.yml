@@ -359,7 +359,7 @@ jobs:
         run: nuget pack libuv-shared.nuspec -Version ${{ needs.windows_x64.outputs.packageVersion }}
 
       - name: NuGet push to GitHub Packages
-        run: nuget push *.nupkg -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -ApiKey ${{ secrets.GITHUB_TOKEN }}
+        run: nuget push *.nupkg -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -ApiKey "pat${{ secrets.GITHUB_TOKEN }}"
 
       - name: NuGet push to nuget.org
         if: github.ref == 'refs/heads/main'
