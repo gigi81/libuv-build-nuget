@@ -355,11 +355,14 @@ jobs:
 
       - uses: nuget/setup-nuget@v3
 
+      - name: Configure NuGet authentication
+        run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
       - name: NuGet pack
         run: nuget pack libuv-shared.nuspec -Version ${{ needs.windows_x64.outputs.packageVersion }}
 
       - name: NuGet push to GitHub Packages
-        run: nuget push *.nupkg -Source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" -ApiKey "pat${{ secrets.GITHUB_TOKEN }}"
+        run: dotnet nuget push *.nupkg --source github
 
       - name: NuGet push to nuget.org
         if: github.ref == 'refs/heads/main'
