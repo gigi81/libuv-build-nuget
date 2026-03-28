@@ -139,16 +139,19 @@ jobs:
   # ------- Linux arm64 (aarch64-linux-gnu) -----------------------------------
   linux_arm64:
     runs-on: ubuntu-latest
-    container:
-      image: dockcross/linux-arm64:latest
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
 
+      - name: Install cross-compiler and qemu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu qemu-user-static
+
       - name: Generate project
         working-directory: libuv
-        run: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+        run: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++
 
       - name: Compile
         working-directory: libuv
@@ -157,11 +160,7 @@ jobs:
       - name: Run tests (on qemu)
         working-directory: libuv
         run: |
-          file ./uv_run_tests
-          useradd -m testrunner
-          dir=$(pwd)
-          chown -R testrunner:testrunner "$dir"
-          su testrunner -c "/usr/bin/qemu-aarch64 $dir/uv_run_tests"
+          QEMU_LD_PREFIX=/usr/aarch64-linux-gnu qemu-aarch64-static ./uv_run_tests
           ret=$?
           if test $ret -eq 0
           then
@@ -184,16 +183,19 @@ jobs:
   # ------- Linux arm (arm-linux-gnueabihf) -----------------------------------
   linux_arm:
     runs-on: ubuntu-latest
-    container:
-      image: dockcross/linux-armv5:latest
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
 
+      - name: Install cross-compiler and qemu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf qemu-user-static
+
       - name: Generate project
         working-directory: libuv
-        run: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+        run: cmake . -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++
 
       - name: Compile
         working-directory: libuv
@@ -202,11 +204,7 @@ jobs:
       - name: Run tests (on qemu)
         working-directory: libuv
         run: |
-          file ./uv_run_tests
-          useradd -m testrunner
-          dir=$(pwd)
-          chown -R testrunner:testrunner "$dir"
-          su testrunner -c "/usr/bin/qemu-arm $dir/uv_run_tests"
+          QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf qemu-arm-static ./uv_run_tests
           ret=$?
           if test $ret -eq 0
           then
@@ -267,7 +265,7 @@ jobs:
 
   # ------- macOS arm64 -------------------------------------------------------
   osx_arm64:
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
         with:
