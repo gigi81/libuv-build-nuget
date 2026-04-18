@@ -2,8 +2,6 @@ name: Build and Publish
 
 on: 
   push:
-    tags:
-      - v*
   workflow_dispatch:
 
 jobs:
@@ -74,7 +72,7 @@ jobs:
           elif [[ "${{ matrix.rid }}" == win-* ]]; then
             build/Release/uv_run_tests.exe
           else
-            build/Release/uv_run_tests
+            build/uv_run_tests
           fi
           ret=$?
           set -e
