@@ -162,11 +162,7 @@ jobs:
           else
             VERSION="${MAJOR}.${MINOR}.${PATCH}.${GITHUB_RUN_NUMBER}-beta"
           fi
-          nuget pack libuv-shared.nuspec \
-            -Version "$VERSION" \
-            -Properties "version=$VERSION;repository=${{ github.repository }}" \
-            -BasePath nuget_root \
-            -OutputDirectory .
+          nuget pack libuv-shared.nuspec -Version "$VERSION"
 
       - name: Upload NuGet Artifact
         uses: actions/upload-artifact@v6
