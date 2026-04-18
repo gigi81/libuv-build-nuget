@@ -110,17 +110,13 @@ jobs:
         with:
           submodules: true
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v8
         with:
-          path: all-artifacts
+          path: runtimes
 
-      - name: Prepare NuGet Structure
-        shell: bash
-        run: |
-          mkdir -p nuget_root/runtimes
-          # all-artifacts contains folders named after RIDs (win-x64, linux-x64, etc.)
-          cp -r all-artifacts/* nuget_root/runtimes/
+      - name: Rename uv.dll to libuv.dll
+        shell: pwsh
+        run: Get-ChildItem -Path runtimes -File -Recurse | % { Rename-Item -Path $_.PSPath -NewName $_.Name.replace("uv.dll","libuv.dll") }
 
       - name: Update change log in nuspec
         shell: pwsh
@@ -149,8 +145,7 @@ jobs:
           $xml.package.metadata.releaseNotes = $changeLog
           $xml.Save($nuspec)
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+      - uses: nuget/setup-nuget@v3
 
       - name: Configure NuGet authentication
         run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
