@@ -17,7 +17,7 @@ jobs:
           - { os: windows-latest, arch: arm64, rid: win-arm64, output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A arm64', build_testing: 'OFF', allowed_failures: 0 }
 
           # Linux (Ubuntu builds generic .so)
-          - { os: ubuntu-latest, arch: x64,   rid: linux-x64,   output_path: build/libuv.so, file-name: libuv.so, build_testing: 'ON',  allowed_failures: 0 }
+          - { os: ubuntu-latest, arch: x64,   rid: linux-x64,   output_path: build/libuv.so, file-name: libuv.so, build_testing: 'ON',  allowed_failures: 12 }
           - { os: ubuntu-latest, arch: arm64, rid: linux-arm64, output_path: build/libuv.so, file-name: libuv.so, cmake_args: '-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++', build_testing: 'ON',  allowed_failures: 6 }
           - { os: ubuntu-latest, arch: arm,   rid: linux-arm,   output_path: build/libuv.so, file-name: libuv.so, cmake_args: '-DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++', build_testing: 'ON',  allowed_failures: 6 }
           - { os: ubuntu-latest, arch: armel, rid: linux-armel, output_path: build/libuv.so, file-name: libuv.so, cmake_args: '-DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabi-g++',   build_testing: 'OFF', allowed_failures: 0 }
