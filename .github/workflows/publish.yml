@@ -1,0 +1,148 @@
+name: Build and Publish
+
+on: 
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }} (${{ matrix.rid }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          # Windows
+          - { os: windows-latest, arch: x64,   rid: win-x64,   output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A x64' }
+          - { os: windows-latest, arch: Win32, rid: win-x86,   output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A Win32' }
+          - { os: windows-latest, arch: arm64, rid: win-arm64, output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A arm64' }
+          
+          # Linux (Ubuntu builds generic .so)
+          - { os: ubuntu-latest,  arch: x64,   rid: linux-x64, output_path: build/libuv.so, file-name: libuv.so }
+          - { os: ubuntu-latest,  arch: arm64, rid: linux-arm64, output_path: build/libuv.so, file-name: libuv.so, cmake_args: '-DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc' }
+          - { os: ubuntu-latest,  arch: arm,   rid: linux-arm,   output_path: build/libuv.so, file-name: libuv.so, cmake_args: '-DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc' }
+          - { os: ubuntu-latest,  arch: armel, rid: linux-armel, output_path: build/libuv.so, file-name: libuv.so, cmake_args: '-DCMAKE_C_COMPILER=arm-linux-gnueabi-gcc' }
+
+          # macOS (Universal binary or specific)
+          - { os: macos-latest,   arch: x64,   rid: osx-x64,   output_path: build/libuv.dylib, file-name: libuv.dylib, cmake_args: '-DCMAKE_OSX_ARCHITECTURES=x86_64' }
+          - { os: macos-latest,   arch: arm64, rid: osx-arm64, output_path: build/libuv.dylib, file-name: libuv.dylib, cmake_args: '-DCMAKE_OSX_ARCHITECTURES=arm64' }
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Install ARM Cross-Compiler
+        if: matrix.rid == 'linux-arm64' || matrix.rid == 'linux-arm' || matrix.rid == 'linux-armel'
+        run: |
+          sudo apt-get update
+          if [ "${{ matrix.rid }}" == "linux-arm64" ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          elif [ "${{ matrix.rid }}" == "linux-arm" ]; then
+            sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
+          elif [ "${{ matrix.rid }}" == "linux-armel" ]; then
+            sudo apt-get install -y gcc-arm-linux-gnueabi g++-arm-linux-gnueabi
+          fi
+
+      - name: Build Project
+        uses: threeal/cmake-action@v2.1.0
+        with:
+          source-dir: libuv
+          build-dir: build
+          args: ${{ matrix.cmake_args }} -DBUILD_TESTING=OFF
+          build-args: '--config Release'
+
+      - name: Prepare Artifact Directory
+        shell: bash
+        run: |
+          mkdir -p staging/${{ matrix.rid }}/native
+          cp ${{ matrix.output_path }} staging/${{ matrix.rid }}/native/${{ matrix.file_name }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          # We name the artifact after the RID
+          name: ${{ matrix.rid }}
+          # Upload only the content for this specific RID
+          path: staging/${{ matrix.rid }}
+          retention-days: 30
+
+  create-nuget:
+    name: Create NuGet Package
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v6
+        with:
+          path: all-artifacts
+
+      - name: Prepare NuGet Structure
+        shell: bash
+        run: |
+          mkdir -p nuget_root/runtimes
+          # all-artifacts contains folders named after RIDs (win-x64, linux-x64, etc.)
+          cp -r all-artifacts/* nuget_root/runtimes/
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Pack NuGet
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          nuget pack libuv-shared.nuspec \
+            -Version "$VERSION" \
+            -Properties "version=$VERSION;repository=${{ github.repository }}" \
+            -BasePath nuget_root \
+            -OutputDirectory .
+
+      - name: Upload NuGet Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: nuget-package
+          path: "*.nupkg"
+
+
+  create-release:
+    name: Create GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: create-nuget
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v6
+        with:
+          path: release-artifacts
+
+      - name: Prepare Release Assets
+        run: |
+          mkdir -p assets
+          # Rename and collect native libraries
+          find release-artifacts -name "libuv.dll"   -path "*/win-x64/*"   -exec cp {} assets/libuv-win-x64.dll \;
+          find release-artifacts -name "libuv.dll"   -path "*/win-x86/*"   -exec cp {} assets/libuv-win-x86.dll \;
+          find release-artifacts -name "libuv.dll"   -path "*/win-arm64/*" -exec cp {} assets/libuv-win-arm64.dll \;
+          find release-artifacts -name "libuv.so"    -path "*/linux-x64/*" -exec cp {} assets/libuv-linux-x64.so \;
+          find release-artifacts -name "libuv.so"    -path "*/linux-arm64/*" -exec cp {} assets/libuv-linux-arm64.so \;
+          find release-artifacts -name "libuv.so"    -path "*/linux-arm/*"   -exec cp {} assets/libuv-linux-arm.so \;
+          find release-artifacts -name "libuv.so"    -path "*/linux-armel/*" -exec cp {} assets/libuv-linux-armel.so \;
+          find release-artifacts -name "libuv.dylib" -path "*/osx-x64/*"   -exec cp {} assets/libuv-osx-x64.dylib \;
+          find release-artifacts -name "libuv.dylib" -path "*/osx-arm64/*" -exec cp {} assets/libuv-osx-arm64.dylib \;
+          
+          # Collect NuGet package
+          find release-artifacts -name "*.nupkg" -exec cp {} assets/ \;
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: assets/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false

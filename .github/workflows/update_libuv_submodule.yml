@@ -1,0 +1,64 @@
+name: Update Submodule
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-submodule:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest v1.x tag and hash
+        id: get_tag
+        run: |
+          # Target only the peeled tags (commit hashes)
+          REMOTE_INFO=$(git ls-remote --tags --sort='v:refname' https://github.com/libuv/libuv.git 'refs/tags/v1.*^{}' | tail -n1)
+          
+          if [ -z "$REMOTE_INFO" ]; then echo "No tags found"; exit 1; fi
+
+          HASH=$(echo $REMOTE_INFO | awk '{print $1}')
+          # Clean tag name: refs/tags/v1.51.0^{} -> v1.51.0
+          TAG=$(echo $REMOTE_INFO | awk '{print $2}' | sed -e 's|refs/tags/||' -e 's|\^{}||')
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "hash=$HASH" >> $GITHUB_OUTPUT
+
+      - name: Update submodule if changed
+        id: update
+        run: |
+          # Update index with the new hash
+          git update-index --add --cacheinfo 160000,${{ steps.get_tag.outputs.hash }},libuv
+          
+          if git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update tags
+        if: steps.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "last tag is ${{ steps.get_tag.outputs.tag }}"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git commit -m "libuv version ${{ steps.get_tag.outputs.tag }}"
+                    
+          git tag -a -m "libuv version ${{ steps.get_tag.outputs.tag }}" ${{ steps.get_tag.outputs.tag }}
+                    
+          git push origin main --follow-tags
+
+          # Trigger the build workflow explicitly since GITHUB_TOKEN pushes don't trigger workflows
+          gh workflow run publish.yml --ref ${{ steps.get_tag.outputs.tag }}

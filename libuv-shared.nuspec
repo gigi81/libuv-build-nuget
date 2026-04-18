@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<package>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>libuv-shared</id>
         <version>0.0.1-ignored</version>
@@ -11,17 +11,8 @@
         <projectUrl>https://github.com/gigi81/libuv-build-nuget</projectUrl>
         <repository type="git" url="https://github.com/gigi81/libuv-build-nuget.git" />
     </metadata>
-    <files>
-        <file src="runtimes\win-arm\*.*" target="runtimes\win-arm\native" />
-        <file src="runtimes\win-arm64\*.*" target="runtimes\win-arm64\native" />
-        <file src="runtimes\win-x86\*.*" target="runtimes\win-x86\native" />
-        <file src="runtimes\win-x64\*.*" target="runtimes\win-x64\native" />
-        <file src="runtimes\linux-x64\*.*" target="runtimes\linux-x64\native" />
-        <file src="runtimes\linux-arm64\*.*" target="runtimes\linux-arm64\native" />
-        <file src="runtimes\linux-arm\*.*" target="runtimes\linux-arm\native" />
-        <file src="runtimes\linux-armel\*.*" target="runtimes\linux-armel\native" />
-        <file src="runtimes\osx-x64\*.*" target="runtimes\osx-x64\native" />
-        <file src="runtimes\osx-arm64\*.*" target="runtimes\osx-arm64\native" />
-        <file src="libuv\LICENS*" target="" />
-    </files>
+  <files>
+    <file src="runtimes\**" target="runtimes" />
+	<file src="libuv\LICENS*" target="" />
+  </files>
 </package>
