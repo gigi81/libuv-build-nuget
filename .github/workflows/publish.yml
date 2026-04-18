@@ -158,7 +158,15 @@ jobs:
       - name: Pack NuGet
         shell: bash
         run: |
-          VERSION=${GITHUB_REF_NAME#v}
+          MAJOR=$(awk '/^#define UV_VERSION_MAJOR /{print $3}' libuv/include/uv/version.h)
+          MINOR=$(awk '/^#define UV_VERSION_MINOR /{print $3}' libuv/include/uv/version.h)
+          PATCH=$(awk '/^#define UV_VERSION_PATCH /{print $3}' libuv/include/uv/version.h)
+          IS_RELEASE=$(awk '/^#define UV_VERSION_IS_RELEASE /{print $3}' libuv/include/uv/version.h)
+          if [ "$IS_RELEASE" = "1" ]; then
+            VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          else
+            VERSION="${MAJOR}.${MINOR}.${PATCH}-beta"
+          fi
           nuget pack libuv-shared.nuspec \
             -Version "$VERSION" \
             -Properties "version=$VERSION;repository=${{ github.repository }}" \
