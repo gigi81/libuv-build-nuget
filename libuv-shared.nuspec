@@ -7,12 +7,14 @@
         <description>libuv shared library packge with native runtime for Windows (x64/x86/arm64), Linux (x64/arm64/arm/armel) and Osx (x64/arm64). CHeck the release notes for more details</description>
         <authors>Luigi Grilli</authors>
         <license type="file">LICENSE</license>
+        <readme>PACKAGE_README.md</readme>
         <releaseNotes></releaseNotes>
         <projectUrl>https://github.com/gigi81/libuv-build-nuget</projectUrl>
         <repository type="git" url="https://github.com/gigi81/libuv-build-nuget.git" />
     </metadata>
   <files>
     <file src="runtimes\**" target="runtimes" />
-	<file src="libuv\LICENS*" target="" />
+    <file src="libuv\LICENS*" target="" />
+    <file src="PACKAGE_README.md" target="" />
   </files>
 </package>
