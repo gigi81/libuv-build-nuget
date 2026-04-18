@@ -103,6 +103,8 @@ jobs:
   create-nuget:
     name: Create NuGet Package
     needs: build
+    permissions:
+      packages: write
     runs-on: windows-latest
     steps:
       - name: Checkout code
