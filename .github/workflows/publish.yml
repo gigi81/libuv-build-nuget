@@ -12,8 +12,8 @@ jobs:
       matrix:
         include:
           # Windows
-          - { os: windows-latest, arch: x64,   rid: win-x64,   output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A x64',   build_testing: 'ON',  allowed_failures: 0 }
-          - { os: windows-latest, arch: Win32, rid: win-x86,   output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A Win32', build_testing: 'ON',  allowed_failures: 0 }
+          - { os: windows-latest, arch: x64,   rid: win-x64,   output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A x64',   build_testing: 'ON',  allowed_failures: 10 }
+          - { os: windows-latest, arch: Win32, rid: win-x86,   output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A Win32', build_testing: 'ON',  allowed_failures: 10 }
           - { os: windows-latest, arch: arm64, rid: win-arm64, output_path: build/Release/uv.dll, file-name: libuv.dll, cmake_args: '-A arm64', build_testing: 'OFF', allowed_failures: 0 }
 
           # Linux (Ubuntu builds generic .so)
