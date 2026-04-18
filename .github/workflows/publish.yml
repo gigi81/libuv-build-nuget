@@ -163,9 +163,9 @@ jobs:
           PATCH=$(awk '/^#define UV_VERSION_PATCH /{print $3}' libuv/include/uv/version.h)
           IS_RELEASE=$(awk '/^#define UV_VERSION_IS_RELEASE /{print $3}' libuv/include/uv/version.h)
           if [ "$IS_RELEASE" = "1" ]; then
-            VERSION="${MAJOR}.${MINOR}.${PATCH}"
+            VERSION="${MAJOR}.${MINOR}.${PATCH}.${GITHUB_RUN_NUMBER}"
           else
-            VERSION="${MAJOR}.${MINOR}.${PATCH}-beta"
+            VERSION="${MAJOR}.${MINOR}.${PATCH}.${GITHUB_RUN_NUMBER}-beta"
           fi
           nuget pack libuv-shared.nuspec \
             -Version "$VERSION" \
