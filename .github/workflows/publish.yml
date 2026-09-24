@@ -105,6 +105,7 @@ jobs:
     needs: build
     permissions:
       packages: write
+      id-token: write # required for nuget.org trusted publishing (OIDC)
     runs-on: windows-latest
     steps:
       - name: Checkout code
@@ -169,9 +170,16 @@ jobs:
       - name: NuGet push to GitHub Packages
         run: dotnet nuget push *.nupkg --source github
 
+      - name: NuGet login (trusted publishing)
+        id: nuget-login
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: NuGet/login@v1
+        with:
+          user: luigi.grilli
+
       - name: NuGet push to nuget.org
         if: startsWith(github.ref, 'refs/tags/v')
-        run: nuget push *.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
 
 
   create-release:
